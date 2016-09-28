@@ -1,4 +1,4 @@
-package fi.crowmoore.speedtester;
+package fi.crowmoore.reflextester;
 
 import android.content.Context;
 import android.content.SharedPreferences;

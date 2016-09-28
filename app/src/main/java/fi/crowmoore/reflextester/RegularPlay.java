@@ -1,32 +1,26 @@
-package fi.crowmoore.speedtester;
+package fi.crowmoore.reflextester;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.CountDownTimer;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import static fi.crowmoore.speedtester.OptionsActivity.PREFERENCES;
+import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
 public class RegularPlay extends AppCompatActivity {
 

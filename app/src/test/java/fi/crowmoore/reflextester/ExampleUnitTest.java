@@ -1,4 +1,4 @@
-package fi.crowmoore.speedtester;
+package fi.crowmoore.reflextester;
 
 import org.junit.Test;
 

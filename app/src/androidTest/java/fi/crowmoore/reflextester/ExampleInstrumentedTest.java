@@ -1,4 +1,4 @@
-package fi.crowmoore.speedtester;
+package fi.crowmoore.reflextester;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("fi.crowmoore.speedtester", appContext.getPackageName());
+        assertEquals("fi.crowmoore.reflextester", appContext.getPackageName());
     }
 }

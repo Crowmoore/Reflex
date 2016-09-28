@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Speed Tester</string>
+    <string name="app_name">Reflex Tester</string>
     <string name="text_regular">Regular</string>
     <string name="text_hardcore">Hardcore</string>
     <string name="text_options">Options</string>
