@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_options"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="fi.crowmoore.speedtester.OptionsActivity"
+    android:background="@android:color/black">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/options_title"
+        android:text="@string/text_options"
+        android:fontFamily="casual"
+        android:textSize="30sp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_sound"
+        android:text="@string/text_sound_volume"
+        android:fontFamily="casual"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="78dp"
+        android:layout_below="@+id/options_title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <SeekBar
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:id="@+id/slider_volume"
+        android:max="50"
+        android:progress="25"
+        android:progressDrawable="@android:color/white"
+        android:layout_alignTop="@+id/label_sound"
+        android:layout_alignLeft="@+id/options_title"
+        android:layout_alignStart="@+id/options_title"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_back"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/text_back"
+        android:onClick="onBackButtonClick"/>
+
+</RelativeLayout>
