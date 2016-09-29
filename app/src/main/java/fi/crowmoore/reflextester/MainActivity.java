@@ -21,6 +21,10 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         startActivity(new Intent(MainActivity.this, RegularPlay.class));
     }
 
+    public void onHardcorePlayClick(View view) {
+        startActivity(new Intent(MainActivity.this, HardcorePlay.class));
+    }
+
     public void onOptionsClick(View view) {
         startActivity(new Intent(MainActivity.this, OptionsActivity.class));
     }

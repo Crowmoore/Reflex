@@ -22,7 +22,7 @@ import java.util.Random;
 
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
-public class RegularPlay extends AppCompatActivity {
+public class HardcorePlay extends AppCompatActivity {
 
     private int score;
     private ImageButton red;
@@ -42,7 +42,6 @@ public class RegularPlay extends AppCompatActivity {
     private int high1;
     private int high2;
     private boolean muted;
-    private boolean starting;
     private final int FIRST = 0;
     private final int DECREMENT_AMOUNT = 5;
     private final int MINIMUM_INTERVAL = 350;
@@ -50,7 +49,7 @@ public class RegularPlay extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_regular_play);
+        setContentView(R.layout.activity_hardcore_play);
 
         initializeComponents();
 
@@ -59,14 +58,14 @@ public class RegularPlay extends AppCompatActivity {
     }
 
     public boolean checkIfCorrect(String command) {
-      if(command.equals(commandsList.get(FIRST))) {
-          commandsList.remove(0);
-          score += 10;
-          scoreView.setText(String.valueOf(score));
-          return true;
-      } else {
-          return false;
-      }
+        if(command.equals(commandsList.get(FIRST))) {
+            commandsList.remove(0);
+            score += 10;
+            scoreView.setText(String.valueOf(score));
+            return true;
+        } else {
+            return false;
+        }
     }
 
     View.OnClickListener blueListener = new View.OnClickListener() {
@@ -111,7 +110,6 @@ public class RegularPlay extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... parameters) {
             while(running) {
-                if(starting) { showCountDown(); }
                 String command = getRandomCommand();
                 commandsList.add(command);
                 Bundle bundle = setupTaskCommandBundle(command, 1);
@@ -122,8 +120,6 @@ public class RegularPlay extends AppCompatActivity {
                     Log.e("Error", "AsyncTask interrupted!");
                 }
                 decrementIntervalBy(DECREMENT_AMOUNT);
-                bundle = setupTaskCommandBundle(command, 0);
-                publishProgress(bundle);
             }
             return null;
         }
@@ -132,21 +128,9 @@ public class RegularPlay extends AppCompatActivity {
             int task = parameters[0].getInt("task");
             String command = parameters[0].getString("command");
             switch(task) {
-                case 0: removeHighlight(command); break;
                 case 1: highlightCommand(command); break;
             }
         }
-    }
-
-    public void showCountDown() {
-        for (int i = 3; i > 0; i--) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Log.e("Error", "Interrupted!");
-            }
-        }
-        starting = false;
     }
 
     @Override
@@ -173,29 +157,12 @@ public class RegularPlay extends AppCompatActivity {
         return bundle;
     }
 
-    public void removeHighlight(String command) {
-        switch(command) {
-            case "Blue": blue.setImageResource(R.drawable.blue_off); break;
-            case "Red": red.setImageResource(R.drawable.red_off); break;
-            case "Green": green.setImageResource(R.drawable.green_off); break;
-            case "Yellow": yellow.setImageResource(R.drawable.yellow_off); break;
-        }
-    }
-
     public void highlightCommand(String command) {
         switch(command) {
-            case "Blue": blue.setImageResource(R.drawable.blue_on);
-                         playSound(low1);
-                         break;
-            case "Red": red.setImageResource(R.drawable.red_on);
-                        playSound(low2);
-                        break;
-            case "Green": green.setImageResource(R.drawable.green_on);
-                          playSound(high1);
-                          break;
-            case "Yellow": yellow.setImageResource(R.drawable.yellow_on);
-                           playSound(high2);
-                           break;
+            case "Blue": playSound(low1); break;
+            case "Red": playSound(low2); break;
+            case "Green": playSound(high1); break;
+            case "Yellow": playSound(high2); break;
         }
     }
 
@@ -236,10 +203,10 @@ public class RegularPlay extends AppCompatActivity {
         muted = settings.getBoolean("Muted", false);
 
         createSoundPool();
-        low1 = soundPool.load(RegularPlay.this, R.raw.low1, 1);
-        low2 = soundPool.load(RegularPlay.this, R.raw.low2, 1);
-        high1 = soundPool.load(RegularPlay.this, R.raw.high1, 1);
-        high2 = soundPool.load(RegularPlay.this, R.raw.high2, 1);
+        low1 = soundPool.load(HardcorePlay.this, R.raw.low1, 1);
+        low2 = soundPool.load(HardcorePlay.this, R.raw.low2, 1);
+        high1 = soundPool.load(HardcorePlay.this, R.raw.high1, 1);
+        high2 = soundPool.load(HardcorePlay.this, R.raw.high2, 1);
 
         blue.setOnClickListener(blueListener);
         red.setOnClickListener(redListener);
@@ -248,7 +215,6 @@ public class RegularPlay extends AppCompatActivity {
 
         selection = 0;
         previous = 0;
-        starting = true;
         running = true;
     }
 
@@ -276,3 +242,4 @@ public class RegularPlay extends AppCompatActivity {
         soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
     }
 }
+

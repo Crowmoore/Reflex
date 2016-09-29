@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/regular_play"
         android:layout_centerHorizontal="true"
-        android:onClick="onRegularPlayClick"
+        android:onClick="onHardcorePlayClick"
         android:id="@+id/hardcore_play"
         android:fontFamily="casual"
         android:textSize="25sp" />
