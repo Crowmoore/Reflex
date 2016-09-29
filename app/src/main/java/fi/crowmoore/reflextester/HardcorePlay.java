@@ -41,6 +41,7 @@ public class HardcorePlay extends AppCompatActivity {
     private int low2;
     private int high1;
     private int high2;
+    private boolean starting;
     private boolean muted;
     private final int FIRST = 0;
     private final int DECREMENT_AMOUNT = 5;
@@ -110,6 +111,7 @@ public class HardcorePlay extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... parameters) {
             while(running) {
+                if(starting) { showCountDown(); }
                 String command = getRandomCommand();
                 commandsList.add(command);
                 Bundle bundle = setupTaskCommandBundle(command, 1);
@@ -131,6 +133,17 @@ public class HardcorePlay extends AppCompatActivity {
                 case 1: highlightCommand(command); break;
             }
         }
+    }
+
+    public void showCountDown() {
+        for (int i = 3; i > 0; i--) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Log.e("Error", "Interrupted!");
+            }
+        }
+        starting = false;
     }
 
     @Override
@@ -215,6 +228,7 @@ public class HardcorePlay extends AppCompatActivity {
 
         selection = 0;
         previous = 0;
+        starting = true;
         running = true;
     }
 
