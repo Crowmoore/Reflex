@@ -51,7 +51,7 @@ public class RegularPlay extends AppCompatActivity {
     private AdView adView;
     private final int FIRST = 0;
     private final int DECREMENT_AMOUNT = 5;
-    private final int MINIMUM_INTERVAL = 350;
+    private final int MINIMUM_INTERVAL = 300;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class RegularPlay extends AppCompatActivity {
         gameLoop.execute();
     }
 
-    public boolean checkIfCorrect(String command) {
+    private boolean checkIfCorrect(String command) {
       if(command.equals(commandsList.get(FIRST))) {
           commandsList.remove(0);
           score += 10;
@@ -74,38 +74,6 @@ public class RegularPlay extends AppCompatActivity {
           return false;
       }
     }
-
-    View.OnClickListener blueListener = new View.OnClickListener() {
-        public void onClick(View view) {
-            if(!checkIfCorrect("Blue")) {
-                endGame();
-            }
-        }
-    };
-
-    View.OnClickListener redListener = new View.OnClickListener() {
-        public void onClick(View view) {
-            if(!checkIfCorrect("Red")) {
-                endGame();
-            }
-        }
-    };
-
-    View.OnClickListener greenListener = new View.OnClickListener() {
-        public void onClick(View view) {
-            if(!checkIfCorrect("Green")) {
-                endGame();
-            }
-        }
-    };
-
-    View.OnClickListener yellowListener = new View.OnClickListener() {
-        public void onClick(View view) {
-            if(!checkIfCorrect("Yellow")) {
-                endGame();
-            }
-        }
-    };
 
     protected void endGame() {
         running = false;
@@ -144,7 +112,7 @@ public class RegularPlay extends AppCompatActivity {
         }
     }
 
-    public void showCountDown() {
+    private void showCountDown() {
         for (int i = 3; i > 0; i--) {
             try {
                 Thread.sleep(1000);
@@ -152,6 +120,7 @@ public class RegularPlay extends AppCompatActivity {
                 Log.e("Error", "Interrupted!");
             }
         }
+        initializeListeners();
         starting = false;
     }
 
@@ -165,21 +134,21 @@ public class RegularPlay extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void decrementIntervalBy(int decrementAmount) {
+    private void decrementIntervalBy(int decrementAmount) {
         interval -= decrementAmount;
         if(interval <= MINIMUM_INTERVAL) {
             interval = MINIMUM_INTERVAL;
         }
     }
 
-    public Bundle setupTaskCommandBundle(String command, int task) {
+    private Bundle setupTaskCommandBundle(String command, int task) {
         Bundle bundle = new Bundle();
         bundle.putString("command", command);
         bundle.putInt("task", task);
         return bundle;
     }
 
-    public void removeHighlight(String command) {
+    private void removeHighlight(String command) {
         switch(command) {
             case "Blue": blue.setImageResource(R.drawable.blue_off); break;
             case "Red": red.setImageResource(R.drawable.red_off); break;
@@ -188,7 +157,7 @@ public class RegularPlay extends AppCompatActivity {
         }
     }
 
-    public void highlightCommand(String command) {
+    private void highlightCommand(String command) {
         switch(command) {
             case "Blue": blue.setImageResource(R.drawable.blue_on);
                          playSound(low1);
@@ -205,14 +174,14 @@ public class RegularPlay extends AppCompatActivity {
         }
     }
 
-    public void playSound(int sound) {
+    private void playSound(int sound) {
         if(!muted) {
             soundPool.stop(sound);
             soundPool.play(sound, 1, 1, 1, 0, 1f);
         }
     }
 
-    public String getRandomCommand() {
+    private String getRandomCommand() {
         Random random = new Random();
         while(selection == previous) {
             selection = random.nextInt(4) + 1;
@@ -247,11 +216,6 @@ public class RegularPlay extends AppCompatActivity {
         high1 = soundPool.load(RegularPlay.this, R.raw.high1, 1);
         high2 = soundPool.load(RegularPlay.this, R.raw.high2, 1);
 
-        blue.setOnClickListener(blueListener);
-        red.setOnClickListener(redListener);
-        green.setOnClickListener(greenListener);
-        yellow.setOnClickListener(yellowListener);
-
         MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id));
         adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
@@ -261,6 +225,45 @@ public class RegularPlay extends AppCompatActivity {
         previous = 0;
         starting = true;
         running = true;
+    }
+
+    private void initializeListeners() {
+        View.OnClickListener blueListener = new View.OnClickListener() {
+            public void onClick(View view) {
+                if(!checkIfCorrect("Blue")) {
+                    endGame();
+                }
+            }
+        };
+
+        View.OnClickListener redListener = new View.OnClickListener() {
+            public void onClick(View view) {
+                if(!checkIfCorrect("Red")) {
+                    endGame();
+                }
+            }
+        };
+
+        View.OnClickListener greenListener = new View.OnClickListener() {
+            public void onClick(View view) {
+                if(!checkIfCorrect("Green")) {
+                    endGame();
+                }
+            }
+        };
+
+        View.OnClickListener yellowListener = new View.OnClickListener() {
+            public void onClick(View view) {
+                if(!checkIfCorrect("Yellow")) {
+                    endGame();
+                }
+            }
+        };
+
+        blue.setOnClickListener(blueListener);
+        red.setOnClickListener(redListener);
+        green.setOnClickListener(greenListener);
+        yellow.setOnClickListener(yellowListener);
     }
 
     protected void createSoundPool() {

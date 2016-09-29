@@ -58,7 +58,7 @@ public class HardcorePlay extends AppCompatActivity {
         gameLoop.execute();
     }
 
-    public boolean checkIfCorrect(String command) {
+    private boolean checkIfCorrect(String command) {
         if(command.equals(commandsList.get(FIRST))) {
             commandsList.remove(0);
             score += 10;
@@ -68,38 +68,6 @@ public class HardcorePlay extends AppCompatActivity {
             return false;
         }
     }
-
-    View.OnClickListener blueListener = new View.OnClickListener() {
-        public void onClick(View view) {
-            if(!checkIfCorrect("Blue")) {
-                endGame();
-            }
-        }
-    };
-
-    View.OnClickListener redListener = new View.OnClickListener() {
-        public void onClick(View view) {
-            if(!checkIfCorrect("Red")) {
-                endGame();
-            }
-        }
-    };
-
-    View.OnClickListener greenListener = new View.OnClickListener() {
-        public void onClick(View view) {
-            if(!checkIfCorrect("Green")) {
-                endGame();
-            }
-        }
-    };
-
-    View.OnClickListener yellowListener = new View.OnClickListener() {
-        public void onClick(View view) {
-            if(!checkIfCorrect("Yellow")) {
-                endGame();
-            }
-        }
-    };
 
     protected void endGame() {
         running = false;
@@ -135,7 +103,7 @@ public class HardcorePlay extends AppCompatActivity {
         }
     }
 
-    public void showCountDown() {
+    private void showCountDown() {
         for (int i = 3; i > 0; i--) {
             try {
                 Thread.sleep(1000);
@@ -143,6 +111,7 @@ public class HardcorePlay extends AppCompatActivity {
                 Log.e("Error", "Interrupted!");
             }
         }
+        initializeListeners();
         starting = false;
     }
 
@@ -156,21 +125,21 @@ public class HardcorePlay extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void decrementIntervalBy(int decrementAmount) {
+    private void decrementIntervalBy(int decrementAmount) {
         interval -= decrementAmount;
         if(interval <= MINIMUM_INTERVAL) {
             interval = MINIMUM_INTERVAL;
         }
     }
 
-    public Bundle setupTaskCommandBundle(String command, int task) {
+    private Bundle setupTaskCommandBundle(String command, int task) {
         Bundle bundle = new Bundle();
         bundle.putString("command", command);
         bundle.putInt("task", task);
         return bundle;
     }
 
-    public void highlightCommand(String command) {
+    private void highlightCommand(String command) {
         switch(command) {
             case "Blue": playSound(low1); break;
             case "Red": playSound(low2); break;
@@ -179,14 +148,14 @@ public class HardcorePlay extends AppCompatActivity {
         }
     }
 
-    public void playSound(int sound) {
+    private void playSound(int sound) {
         if(!muted) {
             soundPool.stop(sound);
             soundPool.play(sound, 1, 1, 1, 0, 1f);
         }
     }
 
-    public String getRandomCommand() {
+    private String getRandomCommand() {
         Random random = new Random();
         while(selection == previous) {
             selection = random.nextInt(4) + 1;
@@ -221,15 +190,49 @@ public class HardcorePlay extends AppCompatActivity {
         high1 = soundPool.load(HardcorePlay.this, R.raw.high1, 1);
         high2 = soundPool.load(HardcorePlay.this, R.raw.high2, 1);
 
-        blue.setOnClickListener(blueListener);
-        red.setOnClickListener(redListener);
-        green.setOnClickListener(greenListener);
-        yellow.setOnClickListener(yellowListener);
-
         selection = 0;
         previous = 0;
         starting = true;
         running = true;
+    }
+
+    private void initializeListeners() {
+        View.OnClickListener blueListener = new View.OnClickListener() {
+            public void onClick(View view) {
+                if(!checkIfCorrect("Blue")) {
+                    endGame();
+                }
+            }
+        };
+
+        View.OnClickListener redListener = new View.OnClickListener() {
+            public void onClick(View view) {
+                if(!checkIfCorrect("Red")) {
+                    endGame();
+                }
+            }
+        };
+
+        View.OnClickListener greenListener = new View.OnClickListener() {
+            public void onClick(View view) {
+                if(!checkIfCorrect("Green")) {
+                    endGame();
+                }
+            }
+        };
+
+        View.OnClickListener yellowListener = new View.OnClickListener() {
+            public void onClick(View view) {
+                if(!checkIfCorrect("Yellow")) {
+                    endGame();
+                }
+            }
+        };
+
+        blue.setOnClickListener(blueListener);
+        red.setOnClickListener(redListener);
+        green.setOnClickListener(greenListener);
+        yellow.setOnClickListener(yellowListener);
     }
 
     protected void createSoundPool() {
