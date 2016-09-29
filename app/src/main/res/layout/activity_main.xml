@@ -31,7 +31,7 @@
         android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="80dp"
-        android:onClick="onRegularPlayClick"
+        android:onClick="onClick"
         android:id="@+id/regular_play"
         android:fontFamily="casual"
         android:textSize="25sp" />
@@ -42,8 +42,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/regular_play"
         android:layout_centerHorizontal="true"
-        android:onClick="onHardcorePlayClick"
         android:id="@+id/hardcore_play"
+        android:onClick="onClick"
         android:fontFamily="casual"
         android:textSize="25sp" />
 
@@ -53,8 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/hardcore_play"
         android:layout_centerHorizontal="true"
-        android:onClick="onOptionsClick"
         android:id="@+id/options"
+        android:onClick="onClick"
         android:fontFamily="casual"
         android:textSize="25sp" />
 
@@ -64,8 +64,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/options"
         android:layout_centerHorizontal="true"
-        android:onClick="onRegularPlayClick"
         android:id="@+id/leaderboards"
         android:fontFamily="casual"
         android:textSize="25sp" />
+
+    <com.google.android.gms.common.SignInButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sign_in"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true" />
+
 </RelativeLayout>

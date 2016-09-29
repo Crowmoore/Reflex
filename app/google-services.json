@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "966792733654",
+    "project_id": "reflex-d4b7b"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966792733654:android:191aced2f342d1e9",
+        "android_client_info": {
+          "package_name": "fi.crowmoore.reflextester"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "966792733654-qsfuj3tfq2qfda0fu9uq27ats8f60p83.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fi.crowmoore.reflextester",
+            "certificate_hash": "2628E59FA3A5958598B42F5E20144868941AEDC0"
+          }
+        },
+        {
+          "client_id": "966792733654-nt074ag230j9q9ths8kamv2kn1geuf04.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpsvPgRn825WUpKuvQ9cf7gw2gvhvD5ds"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
