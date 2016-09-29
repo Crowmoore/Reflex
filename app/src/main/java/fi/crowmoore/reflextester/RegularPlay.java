@@ -3,6 +3,7 @@ package fi.crowmoore.reflextester;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -15,6 +16,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +48,7 @@ public class RegularPlay extends AppCompatActivity {
     private int high2;
     private boolean muted;
     private boolean starting;
+    private AdView adView;
     private final int FIRST = 0;
     private final int DECREMENT_AMOUNT = 5;
     private final int MINIMUM_INTERVAL = 350;
@@ -245,6 +251,11 @@ public class RegularPlay extends AppCompatActivity {
         red.setOnClickListener(redListener);
         green.setOnClickListener(greenListener);
         yellow.setOnClickListener(yellowListener);
+
+        MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id));
+        adView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
+        adView.loadAd(adRequest);
 
         selection = 0;
         previous = 0;

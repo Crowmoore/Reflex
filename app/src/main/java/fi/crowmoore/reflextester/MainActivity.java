@@ -31,6 +31,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     private static final int RC_SIGN_IN = 9001;
     private String name;
     private String email;
+    private GoogleSignInOptions signInOptions;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
 
@@ -38,28 +39,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        editor = settings.edit();
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                //.addApi(Games.API)
-                //.addScope(Games.SCOPE_GAMES)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
-                .build();
-
         setContentView(R.layout.activity_main);
-        findViewById(R.id.sign_in).setOnClickListener(this);
-        if(settings.contains("SignedIn")) {
-            boolean signedIn = settings.getBoolean("SignedIn", false);
-            if(signedIn) {
-                findViewById(R.id.sign_in).setVisibility(View.GONE);
-            }
-        }
+        initializeAndConnect();
     }
 
     private void signIn() {
@@ -79,6 +60,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
                 email = account.getEmail();
                 editor.putBoolean("SignedIn", true);
                 editor.apply();
+                Toast.makeText(getApplicationContext(), "Signed in", Toast.LENGTH_SHORT).show();
                 findViewById(R.id.sign_in).setVisibility(View.GONE);
                 Log.d("tag", "Name: " + name + " email: " + email);
             }
@@ -121,6 +103,32 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             case R.id.hardcore_play: startHardcorePlay(); break;
             case R.id.options: openOptions(); break;
             case R.id.sign_in: signIn(); break;
+        }
+    }
+
+    private void initializeAndConnect() {
+        signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        editor = settings.edit();
+
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                //.addApi(Games.API)
+                //.addScope(Games.SCOPE_GAMES)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, signInOptions)
+                .build();
+        googleApiClient.connect();
+
+
+        findViewById(R.id.sign_in).setOnClickListener(this);
+        if(settings.contains("SignedIn")) {
+            boolean signedIn = settings.getBoolean("SignedIn", false);
+            if(signedIn) {
+                findViewById(R.id.sign_in).setVisibility(View.GONE);
+            }
         }
     }
 }
