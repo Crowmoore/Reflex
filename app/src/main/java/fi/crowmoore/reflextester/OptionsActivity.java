@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
 public class OptionsActivity extends AppCompatActivity {
@@ -19,31 +21,26 @@ public class OptionsActivity extends AppCompatActivity {
         final SharedPreferences settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = settings.edit();
 
-        SeekBar seekBar = (SeekBar) findViewById(R.id.slider_volume);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        CheckBox muteCheckBox = (CheckBox) findViewById(R.id.mute_sound);
+
+        if(settings.contains("Muted")) {
+            boolean muted = settings.getBoolean("Muted", false);
+            muteCheckBox.setChecked(muted);
+        }
+
+        muteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                editor.putInt("Volume", seekBar.getProgress());
-                editor.apply();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
+            public void onCheckedChanged(CompoundButton button, boolean isChecked) {
+                if(button.isChecked()) {
+                    editor.putBoolean("Muted", true);
+                    editor.apply();
+                } else {
+                    editor.putBoolean("Muted", false);
+                    editor.apply();
+                }
             }
         });
-
-        if(settings.contains("Volume")) {
-            int volume = settings.getInt("Volume", 50);
-            seekBar.setProgress(volume);
-        }
     }
-
     public void onBackButtonClick(View view) {
         finish();
     }

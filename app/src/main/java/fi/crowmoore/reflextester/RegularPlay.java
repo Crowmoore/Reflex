@@ -41,7 +41,7 @@ public class RegularPlay extends AppCompatActivity {
     private int low2;
     private int high1;
     private int high2;
-    private int volume;
+    private boolean muted;
     private final int FIRST = 0;
     private final int DECREMENT_AMOUNT = 5;
     private final int MINIMUM_INTERVAL = 350;
@@ -187,8 +187,10 @@ public class RegularPlay extends AppCompatActivity {
     }
 
     public void playSound(int sound) {
-        soundPool.stop(sound);
-        soundPool.play(sound, volume, volume, 1, 0, 1f);
+        if(!muted) {
+            soundPool.stop(sound);
+            soundPool.play(sound, 1, 1, 1, 0, 1f);
+        }
     }
 
     public String getRandomCommand() {
@@ -218,7 +220,7 @@ public class RegularPlay extends AppCompatActivity {
         yellow = (ImageButton) findViewById(R.id.button_yellow);
 
         final SharedPreferences settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        volume = settings.getInt("Volume", 50);
+        muted = settings.getBoolean("Muted", false);
 
         createSoundPool();
         low1 = soundPool.load(RegularPlay.this, R.raw.low1, 1);

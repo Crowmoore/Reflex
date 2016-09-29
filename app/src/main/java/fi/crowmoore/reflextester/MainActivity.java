@@ -1,11 +1,15 @@
 package fi.crowmoore.reflextester;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+public class MainActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,5 +23,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void onOptionsClick(View view) {
         startActivity(new Intent(MainActivity.this, OptionsActivity.class));
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }
