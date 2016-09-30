@@ -219,6 +219,7 @@ public class RegularPlay extends AppCompatActivity {
         MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id));
         adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
+        //AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
 
         selection = 0;

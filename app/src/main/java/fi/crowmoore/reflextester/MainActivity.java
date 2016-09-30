@@ -63,6 +63,8 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
                 Toast.makeText(getApplicationContext(), "Signed in", Toast.LENGTH_SHORT).show();
                 findViewById(R.id.sign_in).setVisibility(View.GONE);
                 Log.d("tag", "Name: " + name + " email: " + email);
+            } else {
+                Toast.makeText(getApplicationContext(), "Unable to sign in", Toast.LENGTH_SHORT).show();
             }
         }
     }

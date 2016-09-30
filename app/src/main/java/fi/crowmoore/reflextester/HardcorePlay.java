@@ -16,6 +16,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -41,6 +45,7 @@ public class HardcorePlay extends AppCompatActivity {
     private int low2;
     private int high1;
     private int high2;
+    private AdView adView;
     private boolean starting;
     private boolean muted;
     private final int FIRST = 0;
@@ -189,6 +194,12 @@ public class HardcorePlay extends AppCompatActivity {
         low2 = soundPool.load(HardcorePlay.this, R.raw.low2, 1);
         high1 = soundPool.load(HardcorePlay.this, R.raw.high1, 1);
         high2 = soundPool.load(HardcorePlay.this, R.raw.high2, 1);
+
+        MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id));
+        adView = (AdView) findViewById(R.id.adViewHC);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
+        //AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
         selection = 0;
         previous = 0;
