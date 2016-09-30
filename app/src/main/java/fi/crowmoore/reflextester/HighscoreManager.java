@@ -13,13 +13,11 @@ import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 public class HighscoreManager {
 
     private int score;
-    private Context context;
     private String mode;
     SharedPreferences preferences;
 
     public HighscoreManager(Context context, int score, String mode) {
         this.score = score;
-        this.context = context;
         this.mode = mode;
 
         preferences = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
@@ -33,7 +31,7 @@ public class HighscoreManager {
         return 0;
     }
 
-    protected boolean newHighscore() {
+    protected boolean isHighscore() {
         int previousBest = getPreviousBest();
         if(score > previousBest) {
             SharedPreferences.Editor editor = preferences.edit();
@@ -46,6 +44,8 @@ public class HighscoreManager {
                                  break;
             }
             return true;
-        } else return false;
+        }
+
+        return false;
     }
 }

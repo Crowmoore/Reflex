@@ -65,21 +65,25 @@ public class HardcorePlay extends AppCompatActivity {
     }
 
     private boolean checkIfCorrect(String command) {
+        if(commandsList.isEmpty()) {
+            return false;
+        }
+
         if(command.equals(commandsList.get(FIRST))) {
             commandsList.remove(0);
             score += 10;
             scoreView.setText(String.valueOf(score));
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     protected void endGame() {
         running = false;
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Hardcore");
-        boolean newHighscore = highscore.newHighscore();
+        boolean newHighscore = highscore.isHighscore();
         if(newHighscore) {
             Toast.makeText(getBaseContext(), "New highscore: " + score, Toast.LENGTH_SHORT).show();
         } else {
@@ -278,4 +282,18 @@ public class HardcorePlay extends AppCompatActivity {
         soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
     }
 }
+/*
+class ColorListener extends View.OnClickListener {
 
+    String color;
+    public ColorListener(String color) {
+        this.color=color;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(!checkIfCorrect("Yellow")) {
+            endGame();
+        }
+    }
+}*/

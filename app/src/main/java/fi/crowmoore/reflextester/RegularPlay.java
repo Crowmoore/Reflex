@@ -66,6 +66,9 @@ public class RegularPlay extends AppCompatActivity {
     }
 
     private boolean checkIfCorrect(String command) {
+        if(commandsList.isEmpty()) {
+            return false;
+        }
       if(command.equals(commandsList.get(FIRST))) {
           commandsList.remove(0);
           score += 10;
@@ -80,7 +83,7 @@ public class RegularPlay extends AppCompatActivity {
         running = false;
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Regular");
-        boolean newHighscore = highscore.newHighscore();
+        boolean newHighscore = highscore.isHighscore();
         if(newHighscore) {
             Toast.makeText(getBaseContext(), "New highscore: " + score, Toast.LENGTH_SHORT).show();
         } else {
@@ -135,9 +138,11 @@ public class RegularPlay extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
-        if ((keyCode == KeyEvent.KEYCODE_BACK))
-        {
-            endGame();
+        switch(keyCode) {
+            case KeyEvent.KEYCODE_BACK: endGame(); break;
+            case KeyEvent.KEYCODE_HOME: endGame(); break;
+            case KeyEvent.KEYCODE_MENU: endGame(); break;
+            default: endGame(); break;
         }
         return super.onKeyDown(keyCode, event);
     }
