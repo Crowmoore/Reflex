@@ -195,7 +195,7 @@ public class HardcorePlay extends AppCompatActivity {
         high1 = soundPool.load(HardcorePlay.this, R.raw.high1, 1);
         high2 = soundPool.load(HardcorePlay.this, R.raw.high2, 1);
 
-        MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id));
+        MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id_for_ads));
         adView = (AdView) findViewById(R.id.adViewHC);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
         //AdRequest adRequest = new AdRequest.Builder().build();

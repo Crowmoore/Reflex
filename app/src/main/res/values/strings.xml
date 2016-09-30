@@ -6,7 +6,7 @@
     <string name="text_leaderboards">Leaderboards</string>
     <string name="text_sound_volume">Mute sound</string>
     <string name="text_back">Back</string>
-    <string name="app_id">ca-app-pub-6999054457732372~2280502043</string>
+    <string name="app_id_for_ads">ca-app-pub-6999054457732372~2280502043</string>
     <string name="test_device_id">5684F842F0D016C11DE31BCD5E4463CA</string>
     <string name="banner_ad_unit_id_regular">ca-app-pub-6999054457732372/5233968441</string>
     <string name="banner_ad_unit_id_hardcore">ca-app-pub-6999054457732372/3844633642</string>

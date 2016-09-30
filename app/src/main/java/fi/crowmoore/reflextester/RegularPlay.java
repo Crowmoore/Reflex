@@ -216,7 +216,7 @@ public class RegularPlay extends AppCompatActivity {
         high1 = soundPool.load(RegularPlay.this, R.raw.high1, 1);
         high2 = soundPool.load(RegularPlay.this, R.raw.high2, 1);
 
-        MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id));
+        MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id_for_ads));
         adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
         //AdRequest adRequest = new AdRequest.Builder().build();
