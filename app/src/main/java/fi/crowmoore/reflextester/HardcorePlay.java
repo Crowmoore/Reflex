@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -77,6 +78,13 @@ public class HardcorePlay extends AppCompatActivity {
     protected void endGame() {
         running = false;
         soundPool.release();
+        HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Hardcore");
+        boolean newHighscore = highscore.newHighscore();
+        if(newHighscore) {
+            Toast.makeText(getBaseContext(), "New highscore: " + score, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getBaseContext(), "Score: " + score, Toast.LENGTH_SHORT).show();
+        }
         finish();
     }
 
