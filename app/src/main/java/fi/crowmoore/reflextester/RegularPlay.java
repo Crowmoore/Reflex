@@ -84,7 +84,7 @@ public class RegularPlay extends AppCompatActivity {
         if(newHighscore) {
             Toast.makeText(getBaseContext(), "New highscore: " + score, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getBaseContext(), "Score: ", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "Score: " + score, Toast.LENGTH_SHORT).show();
         }
         finish();
     }
