@@ -164,6 +164,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         } else {
             Toast.makeText(getBaseContext(), "Score: " + score, Toast.LENGTH_SHORT).show();
         }
+        Games.Leaderboards.submitScore(googleApiClient, "CgkI1sfZypEcEAIQCA", score);
         finish();
     }
 

@@ -25,6 +25,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     private GoogleApiClient googleApiClient;
     public static final int RC_SIGN_IN = 9001;
+    public static final int REQUEST_LEADERBOARD = 100;
     private boolean signInClicked = false;
     private boolean resolvingConnectionFailure = false;
     private boolean autoStartSignInFlow = true;
@@ -72,7 +73,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     public void signIn() {
         if(googleApiClient.isConnected()) {
-            Toast.makeText(getBaseContext(), "APIClient already connected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "APIClient already connected, button should not be visible", Toast.LENGTH_SHORT).show();
         } else {
             signInClicked = true;
             googleApiClient.connect();
@@ -102,6 +103,11 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     public void openOptions() {
         startActivity(new Intent(MainActivity.this, OptionsActivity.class));
+    }
+
+    private void showLeaderboard() {
+        startActivityForResult(Games.Leaderboards.getLeaderboardIntent(googleApiClient,
+                "CgkI1sfZypEcEAIQCA"), REQUEST_LEADERBOARD);
     }
 
     @Override
@@ -145,6 +151,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             case R.id.regular_play: startRegularPlay(); break;
             case R.id.hardcore_play: startHardcorePlay(); break;
             case R.id.options: openOptions(); break;
+            case R.id.leaderboards: showLeaderboard(); break;
             case R.id.sign_in_button: signIn(); break;
             case R.id.sign_out_button: signOut(); break;
         }
