@@ -134,9 +134,8 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
           scoreView.setText(String.valueOf(score));
           checkScoreForAchievement(score);
           return true;
-        } else {
-          return false;
-      }
+        }
+        return false;
     }
 
     private void checkScoreForAchievement(int score) {
