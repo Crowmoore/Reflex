@@ -21,14 +21,27 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
+import com.google.example.games.basegameutils.BaseGameUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static fi.crowmoore.reflextester.MainActivity.RC_SIGN_IN;
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
-public class RegularPlay extends AppCompatActivity {
+public class RegularPlay extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
+
+    private GoogleApiClient googleApiClient;
+    private boolean resolvingConnectionFailure = false;
+    private boolean signInClicked = false;
+    private boolean autoStartSignInFlow = true;
+    private boolean signInFlow = false;
+    private boolean explicitSignOut = false;
 
     private int score;
     private ImageButton red;
@@ -49,6 +62,8 @@ public class RegularPlay extends AppCompatActivity {
     private int high2;
     private boolean muted;
     private boolean starting;
+    private SharedPreferences.Editor editor;
+    private AchievementManager achievementManager;
     private AdView adView;
     private final int FIRST = 0;
     private final int DECREMENT_AMOUNT = 5;
@@ -65,18 +80,78 @@ public class RegularPlay extends AppCompatActivity {
         gameLoop.execute();
     }
 
+    protected void onStart() {
+        super.onStart();
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Games.API)
+                .build();
+        if (!signInFlow && !explicitSignOut) {
+            googleApiClient.connect();
+            achievementManager = new AchievementManager(this, googleApiClient);
+            Log.d("tag", "GoogleAPIClient connection called");
+            if(googleApiClient.isConnected()) {
+                Log.d("tag", "GoogleAPIClient connected");
+            } else {
+                Log.d("tag", "GoogleAPIClient not connected");
+            }
+        }
+    }
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        Log.d("tag", "GoogleAPIClient Connected");
+    }
+    @Override
+    public void onConnectionSuspended(int cause) {
+        Toast.makeText(getApplicationContext(), "Connection suspended", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if(resolvingConnectionFailure) {
+            return;
+        }
+        if(signInClicked || autoStartSignInFlow) {
+            autoStartSignInFlow = false;
+            signInClicked = false;
+            resolvingConnectionFailure = true;
+
+            if(!BaseGameUtils.resolveConnectionFailure(this,
+                    googleApiClient, connectionResult,
+                    RC_SIGN_IN, getString(R.string.sign_in_error))) {
+                resolvingConnectionFailure = false;
+            }
+        }
+    }
+
     private boolean checkIfCorrect(String command) {
         if(commandsList.isEmpty()) {
             return false;
         }
-      if(command.equals(commandsList.get(FIRST))) {
+        if(command.equals(commandsList.get(FIRST))) {
           commandsList.remove(0);
           score += 10;
           scoreView.setText(String.valueOf(score));
+          checkScoreForAchievement(score);
           return true;
-      } else {
+        } else {
           return false;
       }
+    }
+
+    private void checkScoreForAchievement(int score) {
+        if(score >= 300) {
+            achievementManager.unlockAchievement("Baby's first steps", "CgkI1sfZypEcEAIQAQ");
+        }
+        if(score >= 1000) {
+            achievementManager.unlockAchievement("Getting the hang of it", "CgkI1sfZypEcEAIQAg");
+        }
+        if(score >= 3000) {
+            achievementManager.unlockAchievement("Master of focus", "CgkI1sfZypEcEAIQAw");
+        }
+        if(score >= 5000) {
+            achievementManager.unlockAchievement("Insane reflexes", "CgkI1sfZypEcEAIQBA");
+        }
     }
 
     protected void endGame() {
@@ -222,6 +297,7 @@ public class RegularPlay extends AppCompatActivity {
 
         final SharedPreferences settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         muted = settings.getBoolean("Muted", false);
+        editor = settings.edit();
 
         createSoundPool();
         low1 = soundPool.load(RegularPlay.this, R.raw.low1, 1);

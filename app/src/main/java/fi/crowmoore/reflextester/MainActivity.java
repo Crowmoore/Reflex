@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.fitness.data.Application;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.google.android.gms.auth.api.Auth;
@@ -23,7 +24,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private GoogleApiClient googleApiClient;
-    private static final int RC_SIGN_IN = 9001;
+    public static final int RC_SIGN_IN = 9001;
     private boolean signInClicked = false;
     private boolean resolvingConnectionFailure = false;
     private boolean autoStartSignInFlow = true;
@@ -40,20 +41,15 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
-
-        signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Games.API)
-                .addScope(Games.SCOPE_GAMES)
-                .build();
     }
 
     protected void onStart() {
         super.onStart();
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Games.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
         if (!signInFlow && !explicitSignOut) {
             googleApiClient.connect();
         }
@@ -64,11 +60,24 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         googleApiClient.disconnect();
     }
 
-    public void signIn() {
-        signInClicked = true;
+    protected void onPause() {
+        super.onPause();
+        googleApiClient.disconnect();
+    }
+
+    protected void onResume() {
+        super.onPause();
         googleApiClient.connect();
-        //Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
-        //startActivityForResult(intent, RC_SIGN_IN);
+    }
+
+    public void signIn() {
+        if(googleApiClient.isConnected()) {
+            Toast.makeText(getBaseContext(), "APIClient already connected", Toast.LENGTH_SHORT).show();
+        } else {
+            signInClicked = true;
+            googleApiClient.connect();
+            Toast.makeText(getBaseContext(), "APIClient connected via manual sign in", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void signOut() {
@@ -80,26 +89,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_button).setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if(result.isSuccess()) {
-                GoogleSignInAccount account = result.getSignInAccount();
-                name = account.getDisplayName();
-                email = account.getEmail();
-                Toast.makeText(getApplicationContext(), "Signed in", Toast.LENGTH_SHORT).show();
-                findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-                findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
-                Log.d("tag", "Name: " + name + " email: " + email);
-            } else {
-                Toast.makeText(getApplicationContext(), "Unable to sign in", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 
@@ -117,13 +106,17 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     @Override
     public void onConnected(Bundle connectionHint) {
+        Log.d("tag", "GoogleAPIClient Connected");
+        Toast.makeText(getBaseContext(), "APIClient connected successfully", Toast.LENGTH_SHORT).show();
         findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onConnectionSuspended(int cause) {
-        Toast.makeText(getApplicationContext(), "Connection suspended", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "APIClient connection suspended", Toast.LENGTH_SHORT).show();
+        findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+        findViewById(R.id.sign_out_button).setVisibility(View.GONE);
     }
 
     @Override
