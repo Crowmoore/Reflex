@@ -9,20 +9,12 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.fitness.data.Application;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-
-import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
 public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -113,13 +105,13 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     private void showLeaderboard(String type) {
         switch(type) {
             case "Regular": startActivityForResult(Games.Leaderboards.getLeaderboardIntent(googleApiClient,
-                            "CgkI1sfZypEcEAIQCA"), REQUEST_LEADERBOARD);
+                            getString(R.string.leaderboard_regular_id)), REQUEST_LEADERBOARD);
                             dialog.dismiss();
                             break;
             case "Hardcore": startActivityForResult(Games.Leaderboards.getLeaderboardIntent(googleApiClient,
-                            "CgkI1sfZypEcEAIQCQ"), REQUEST_LEADERBOARD);
-                            dialog.dismiss();
-                            break;
+                             getString(R.string.leaderboard_hardcore_id)), REQUEST_LEADERBOARD);
+                             dialog.dismiss();
+                             break;
         }
     }
 

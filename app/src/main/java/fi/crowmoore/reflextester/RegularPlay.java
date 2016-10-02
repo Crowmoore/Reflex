@@ -173,7 +173,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Regular");
         boolean newHighscore = highscore.isHighscore();
-        Games.Leaderboards.submitScore(googleApiClient, "CgkI1sfZypEcEAIQCA", score);
+        Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_regular_id), score);
         int currentHighscore = highscore.getHighscore();
         createScoreDialog();
         loadPlayerRank();
@@ -182,11 +182,16 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     private void loadPlayerRank() {
-        Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, "CgkI1sfZypEcEAIQCA", LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
+        Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_regular_id), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
             @Override
             public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
                 LeaderboardScore lbs = scoreResult.getScore();
-                leaderboardRank.setText("Leaderboard rank: " + lbs.getDisplayRank());
+                String rank = lbs.getDisplayRank();
+                if(rank != null) {
+                    leaderboardRank.setText("Leaderboard rank: " + lbs.getDisplayRank());
+                } else {
+                    leaderboardRank.setText("Could not retrieve leaderboard rank");
+                }
             }
         });
     }
@@ -223,7 +228,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     private void showCountDown() {
-        for (int i = 3; i > 0; i--) {
+        for (int i = 2; i > 0; i--) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

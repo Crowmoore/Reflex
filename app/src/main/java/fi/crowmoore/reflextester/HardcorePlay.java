@@ -164,7 +164,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Hardcore");
         boolean newHighscore = highscore.isHighscore();
-        Games.Leaderboards.submitScore(googleApiClient, "CgkI1sfZypEcEAIQCQ", score);
+        Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_hardcore_id), score);
         int currentHighscore = highscore.getHighscore();
         createScoreDialog();
         loadPlayerRank();
@@ -173,11 +173,16 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void loadPlayerRank() {
-        Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, "CgkI1sfZypEcEAIQCQ", LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
+        Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_hardcore_id), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
             @Override
             public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
                 LeaderboardScore lbs = scoreResult.getScore();
-                leaderboardRank.setText("Leaderboard rank: " + lbs.getDisplayRank());
+                String rank = lbs.getDisplayRank();
+                if(rank != null) {
+                    leaderboardRank.setText("Leaderboard rank: " + lbs.getDisplayRank());
+                } else {
+                    leaderboardRank.setText("Could not retrieve leaderboard rank");
+                }
             }
         });
     }
