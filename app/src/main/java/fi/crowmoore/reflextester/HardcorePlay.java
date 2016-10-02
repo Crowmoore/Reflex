@@ -229,7 +229,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
             case KeyEvent.KEYCODE_BACK: endGame(); break;
             case KeyEvent.KEYCODE_HOME: endGame(); break;
             case KeyEvent.KEYCODE_MENU: endGame(); break;
-            default: endGame(); break;
+            case KeyEvent.KEYCODE_POWER: endGame(); break;
         }
         return super.onKeyDown(keyCode, event);
     }
