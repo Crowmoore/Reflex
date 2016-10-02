@@ -1,9 +1,13 @@
 package fi.crowmoore.reflextester;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -26,6 +30,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     private GoogleApiClient googleApiClient;
     public static final int RC_SIGN_IN = 9001;
     public static final int REQUEST_LEADERBOARD = 100;
+    private LeaderboardDialogFragment dialog;
     private boolean signInClicked = false;
     private boolean resolvingConnectionFailure = false;
     private boolean autoStartSignInFlow = true;
@@ -73,11 +78,11 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     public void signIn() {
         if(googleApiClient.isConnected()) {
-            Toast.makeText(getBaseContext(), "APIClient already connected, button should not be visible", Toast.LENGTH_SHORT).show();
+            Log.d("tag", "GoogleAPIClient already connected, button should not have been visible");
         } else {
             signInClicked = true;
             googleApiClient.connect();
-            Toast.makeText(getBaseContext(), "APIClient connected via manual sign in", Toast.LENGTH_SHORT).show();
+            Log.d("tag", "GoogleAPIClient connected via manual input");
         }
     }
 
@@ -105,24 +110,36 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         startActivity(new Intent(MainActivity.this, OptionsActivity.class));
     }
 
-    private void showLeaderboard() {
-        startActivityForResult(Games.Leaderboards.getLeaderboardIntent(googleApiClient,
-                "CgkI1sfZypEcEAIQCA"), REQUEST_LEADERBOARD);
+    private void showLeaderboard(String type) {
+        switch(type) {
+            case "Regular": startActivityForResult(Games.Leaderboards.getLeaderboardIntent(googleApiClient,
+                            "CgkI1sfZypEcEAIQCA"), REQUEST_LEADERBOARD);
+                            dialog.dismiss();
+                            break;
+            case "Hardcore": startActivityForResult(Games.Leaderboards.getLeaderboardIntent(googleApiClient,
+                            "CgkI1sfZypEcEAIQCQ"), REQUEST_LEADERBOARD);
+                            dialog.dismiss();
+                            break;
+        }
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.d("tag", "GoogleAPIClient Connected");
-        Toast.makeText(getBaseContext(), "APIClient connected successfully", Toast.LENGTH_SHORT).show();
         findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onConnectionSuspended(int cause) {
-        Toast.makeText(getApplicationContext(), "APIClient connection suspended", Toast.LENGTH_SHORT).show();
+        Log.d("tag", "GoogleAPIClient connection suspended");
         findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
         findViewById(R.id.sign_out_button).setVisibility(View.GONE);
+    }
+
+    public void showDialog() {
+        dialog = new LeaderboardDialogFragment();
+        dialog.show(getFragmentManager(), null);
     }
 
     @Override
@@ -151,9 +168,23 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             case R.id.regular_play: startRegularPlay(); break;
             case R.id.hardcore_play: startHardcorePlay(); break;
             case R.id.options: openOptions(); break;
-            case R.id.leaderboards: showLeaderboard(); break;
+            case R.id.leaderboards: showDialog(); break;
             case R.id.sign_in_button: signIn(); break;
             case R.id.sign_out_button: signOut(); break;
+            case R.id.regular_leaderboard: showLeaderboard("Regular"); break;
+            case R.id.hardcore_leaderboard: showLeaderboard("Hardcore"); break;
+        }
+    }
+
+    public static class LeaderboardDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+
+            final View dialogView = inflater.inflate(R.layout.leaderboard_dialog, null);
+            builder.setView(dialogView);
+            return builder.create();
         }
     }
 }

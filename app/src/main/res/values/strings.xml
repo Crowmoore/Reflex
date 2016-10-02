@@ -11,4 +11,9 @@
     <string name="test_device_id">5684F842F0D016C11DE31BCD5E4463CA</string>
     <string name="banner_ad_unit_id_regular">ca-app-pub-6999054457732372/5233968441</string>
     <string name="banner_ad_unit_id_hardcore">ca-app-pub-6999054457732372/3844633642</string>
+
+    <string-array name="leaderboard_types">
+        <item>Regular</item>
+        <item>Hardcore</item>
+    </string-array>
 </resources>
