@@ -1,6 +1,7 @@
 package fi.crowmoore.reflextester;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
@@ -22,7 +23,11 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.leaderboard.LeaderboardScore;
+import com.google.android.gms.games.leaderboard.LeaderboardVariant;
+import com.google.android.gms.games.leaderboard.Leaderboards;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
 import java.util.ArrayList;
@@ -48,6 +53,9 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private ImageButton green;
     private ImageButton yellow;
     private TextView scoreView;
+    private TextView scoreResult;
+    private TextView highscoreResult;
+    private TextView leaderboardRank;
     private List<String> commandsList = new ArrayList<>();
     private boolean running;
     private long interval;
@@ -64,6 +72,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private AchievementManager achievementManager;
     private boolean starting;
     private boolean muted;
+    private Dialog scoreDialog;
     private final int FIRST = 0;
     private final int DECREMENT_AMOUNT = 5;
     private final int MINIMUM_INTERVAL = 350;
@@ -155,13 +164,22 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Hardcore");
         boolean newHighscore = highscore.isHighscore();
-        if(newHighscore) {
-            Toast.makeText(getBaseContext(), "New highscore: " + score, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getBaseContext(), "Score: " + score, Toast.LENGTH_SHORT).show();
-        }
         Games.Leaderboards.submitScore(googleApiClient, "CgkI1sfZypEcEAIQCQ", score);
-        finish();
+        int currentHighscore = highscore.getHighscore();
+        createScoreDialog();
+        loadPlayerRank();
+        scoreResult.setText("Score: " + score);
+        highscoreResult.setText("Highscore: " + currentHighscore);
+    }
+
+    private void loadPlayerRank() {
+        Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, "CgkI1sfZypEcEAIQCQ", LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
+            @Override
+            public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
+                LeaderboardScore lbs = scoreResult.getScore();
+                leaderboardRank.setText("Leaderboard rank: " + lbs.getDisplayRank());
+            }
+        });
     }
 
     private class GameLoop extends AsyncTask<Void, Bundle, Void> {
@@ -294,6 +312,15 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         running = true;
     }
 
+    public void onBackButtonClick(View view) {
+        scoreDialog.dismiss();
+        finish();
+    }
+    public void onResetButtonClicked(View view) {
+        scoreDialog.dismiss();
+        HardcorePlay.this.recreate();
+    }
+
     private void initializeListeners() {
         View.OnClickListener blueListener = new View.OnClickListener() {
             public void onClick(View view) {
@@ -355,6 +382,18 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     @SuppressWarnings("deprecation")
     protected void createOldSoundPool() {
         soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+    }
+
+    protected void createScoreDialog() {
+        scoreDialog = new Dialog(HardcorePlay.this);
+        scoreDialog.setContentView(R.layout.score_dialog);
+        scoreDialog.setTitle("Game Over");
+
+        scoreResult = (TextView) scoreDialog.findViewById(R.id.score_result);
+        highscoreResult = (TextView) scoreDialog.findViewById(R.id.highscore_result);
+        leaderboardRank = (TextView) scoreDialog.findViewById(R.id.leaderboard_rank);
+
+        scoreDialog.show();
     }
 }
 /*

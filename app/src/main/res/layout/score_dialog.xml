@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="250dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/score_dialog"
+        android:text="Game Over"
+        android:fontFamily="casual"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/score_result"
+        android:text=""
+        android:fontFamily="casual"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/highscore_result"
+        android:text=""
+        android:fontFamily="casual"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/leaderboard_rank"
+        android:text=""
+        android:fontFamily="casual"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp" />
+
+    <Button
+        android:text="Back to menu"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_alignTop="@+id/reset_button"
+        android:layout_toRightOf="@+id/reset_button"
+        android:onClick="onBackButtonClick"
+        android:fontFamily="casual"
+        android:id="@+id/back_button" />
+
+    <Button
+        android:text="Try again"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:onClick="onResetButtonClicked"
+        android:id="@+id/reset_button"
+        android:fontFamily="casual"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>

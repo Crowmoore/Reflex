@@ -48,4 +48,12 @@ public class HighscoreManager {
 
         return false;
     }
+
+    protected int getHighscore() {
+        switch(mode) {
+            case "Regular": return preferences.getInt("RegularHighscore", 0);
+            case "Hardcore": return preferences.getInt("HardcoreHighscore", 0);
+        }
+        return 0;
+    }
 }

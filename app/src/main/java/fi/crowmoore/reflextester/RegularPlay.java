@@ -1,6 +1,10 @@
 package fi.crowmoore.reflextester;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -13,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -23,8 +28,14 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
+import com.google.android.gms.games.leaderboard.LeaderboardScore;
+import com.google.android.gms.games.leaderboard.LeaderboardVariant;
+import com.google.android.gms.games.leaderboard.Leaderboards;
 import com.google.example.games.basegameutils.BaseGameUtils;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +60,9 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private ImageButton green;
     private ImageButton yellow;
     private TextView scoreView;
+    private TextView scoreResult;
+    private TextView highscoreResult;
+    private TextView leaderboardRank;
     private List<String> commandsList = new ArrayList<>();
     private boolean running;
     private long interval;
@@ -62,6 +76,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private int high2;
     private boolean muted;
     private boolean starting;
+    private Dialog scoreDialog;
     private SharedPreferences.Editor editor;
     private AchievementManager achievementManager;
     private AdView adView;
@@ -158,13 +173,22 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Regular");
         boolean newHighscore = highscore.isHighscore();
-        if(newHighscore) {
-            Toast.makeText(getBaseContext(), "New highscore: " + score, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getBaseContext(), "Score: " + score, Toast.LENGTH_SHORT).show();
-        }
         Games.Leaderboards.submitScore(googleApiClient, "CgkI1sfZypEcEAIQCA", score);
-        finish();
+        int currentHighscore = highscore.getHighscore();
+        createScoreDialog();
+        loadPlayerRank();
+        scoreResult.setText("Score: " + score);
+        highscoreResult.setText("Highscore: " + currentHighscore);
+    }
+
+    private void loadPlayerRank() {
+        Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, "CgkI1sfZypEcEAIQCA", LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
+            @Override
+            public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
+                LeaderboardScore lbs = scoreResult.getScore();
+                leaderboardRank.setText("Leaderboard rank: " + lbs.getDisplayRank());
+            }
+        });
     }
 
     private class GameLoop extends AsyncTask<Void, Bundle, Void> {
@@ -317,6 +341,15 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         running = true;
     }
 
+    public void onBackButtonClick(View view) {
+        scoreDialog.dismiss();
+        finish();
+    }
+    public void onResetButtonClicked(View view) {
+        scoreDialog.dismiss();
+        RegularPlay.this.recreate();
+    }
+
     private void initializeListeners() {
         View.OnClickListener blueListener = new View.OnClickListener() {
             public void onClick(View view) {
@@ -378,5 +411,17 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     @SuppressWarnings("deprecation")
     protected void createOldSoundPool() {
         soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+    }
+
+    protected void createScoreDialog() {
+        scoreDialog = new Dialog(RegularPlay.this);
+        scoreDialog.setContentView(R.layout.score_dialog);
+        scoreDialog.setTitle("Game Over");
+
+        scoreResult = (TextView) scoreDialog.findViewById(R.id.score_result);
+        highscoreResult = (TextView) scoreDialog.findViewById(R.id.highscore_result);
+        leaderboardRank = (TextView) scoreDialog.findViewById(R.id.leaderboard_rank);
+
+        scoreDialog.show();
     }
 }
