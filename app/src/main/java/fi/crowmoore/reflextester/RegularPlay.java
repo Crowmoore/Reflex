@@ -182,18 +182,22 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     private void loadPlayerRank() {
-        Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_regular_id), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
-            @Override
-            public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
-                LeaderboardScore lbs = scoreResult.getScore();
-                String rank = lbs.getDisplayRank();
-                if(rank != null) {
-                    leaderboardRank.setText("Leaderboard rank: " + lbs.getDisplayRank());
-                } else {
-                    leaderboardRank.setText("Could not retrieve leaderboard rank");
+        try {
+            Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_hardcore_id), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
+                @Override
+                public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
+                    LeaderboardScore lbs = scoreResult.getScore();
+                    String rank = lbs.getDisplayRank();
+                    if(rank != null) {
+                        leaderboardRank.setText("Leaderboard rank: " + lbs.getDisplayRank());
+                    } else {
+                        leaderboardRank.setText("Could not retrieve leaderboard rank");
+                    }
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            leaderboardRank.setText("Could not retrieve leaderboard rank");
+        }
     }
 
     private class GameLoop extends AsyncTask<Void, Bundle, Void> {
