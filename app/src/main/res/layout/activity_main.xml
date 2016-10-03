@@ -1,79 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="fi.crowmoore.reflextester.MainActivity"
     android:background="@android:color/black">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:id="@+id/title"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:fontFamily="casual"
+        android:id="@+id/sign_in_info"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="5dp"
+        android:paddingBottom="10dp"
+        android:layout_alignParentLeft="true"
+        android:text=""
+        android:ellipsize="marquee"
         android:textColor="@android:color/white" />
-
-    <Button
-        android:text="@string/text_regular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
-        android:onClick="onClick"
-        android:id="@+id/regular_play"
-        android:fontFamily="casual"
-        android:textSize="25sp" />
-
-    <Button
-        android:text="@string/text_hardcore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/regular_play"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/hardcore_play"
-        android:onClick="onClick"
-        android:fontFamily="casual"
-        android:textSize="25sp" />
-
-    <Button
-        android:text="@string/text_options"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/hardcore_play"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/options"
-        android:onClick="onClick"
-        android:fontFamily="casual"
-        android:textSize="25sp" />
-
-    <Button
-        android:text="@string/text_leaderboards"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/options"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/leaderboards"
-        android:onClick="onClick"
-        android:fontFamily="casual"
-        android:textSize="25sp" />
 
     <com.google.android.gms.common.SignInButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sign_in_button"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true" />
 
     <Button
@@ -82,7 +37,59 @@
         android:layout_height="wrap_content"
         android:text="Sign Out"
         android:visibility="invisible"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true" />
+
+    <ImageButton
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@drawable/menu_regular"
+        android:onClick="onClick"
+        android:id="@+id/regular_play"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@drawable/menu_hardcore"
+        android:onClick="onClick"
+        android:id="@+id/hardcore_play"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/regular_play"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@drawable/menu_options"
+        android:onClick="onClick"
+        android:id="@+id/options"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageButton
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@drawable/menu_leaderboards"
+        android:onClick="onClick"
+        android:id="@+id/leaderboards"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/options"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="400dp"
+        android:layout_height="150dp"
+        android:background="@drawable/menu_title"
+        android:id="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
@@ -28,6 +29,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     private boolean autoStartSignInFlow = true;
     private boolean signInFlow = false;
     private boolean explicitSignOut = false;
+    private TextView signInInfo;
     private String name;
     private String email;
     private GoogleSignInOptions signInOptions;
@@ -39,6 +41,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
+        signInInfo = (TextView) findViewById(R.id.sign_in_info);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -47,50 +50,50 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
                 .build();
     }
 
+    @Override
     protected void onStart() {
         super.onStart();
-        if (!signInFlow && !explicitSignOut) {
-            googleApiClient.connect();
-        }
+        googleApiClient.connect();
     }
 
+    @Override
     protected void onStop() {
         super.onStop();
-        googleApiClient.disconnect();
-    }
-
-    protected void onPause() {
-        super.onPause();
         if(googleApiClient.isConnected()) {
             googleApiClient.disconnect();
         }
     }
 
-    protected void onResume() {
-        super.onPause();
-        googleApiClient.connect();
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        if(googleApiClient.isConnected()) {
+//            googleApiClient.disconnect();
+//        }
+//    }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if(!googleApiClient.isConnected()) {
+//            googleApiClient.connect();
+//        }
+//    }
 
     public void signIn() {
-        if(googleApiClient.isConnected()) {
-            Log.d("tag", "GoogleAPIClient already connected, button should not have been visible");
-        } else {
-            signInClicked = true;
-            explicitSignOut = false;
-            googleApiClient.connect();
-            Log.d("tag", "GoogleAPIClient connected via manual input");
-        }
+        signInClicked = true;
+        googleApiClient.connect();
     }
 
     public void signOut() {
         signInClicked = false;
-        explicitSignOut = true;
+        Games.signOut(googleApiClient);
         if (googleApiClient != null && googleApiClient.isConnected()) {
-            Games.signOut(googleApiClient);
             googleApiClient.disconnect();
 
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_button).setVisibility(View.GONE);
+            signInInfo.setText("You need to be signed in to Google Play Services in order to get achievements and compete on the leaderboards");
         }
     }
 
@@ -124,13 +127,13 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         Log.d("tag", "GoogleAPIClient Connected");
         findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
+        signInInfo.setText("You are signed in to Google Play Services");
     }
 
     @Override
     public void onConnectionSuspended(int cause) {
         Log.d("tag", "GoogleAPIClient connection suspended");
-        findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-        findViewById(R.id.sign_out_button).setVisibility(View.GONE);
+        googleApiClient.connect();
     }
 
     public void showDialog() {
