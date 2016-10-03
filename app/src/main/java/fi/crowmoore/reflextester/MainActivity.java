@@ -39,15 +39,16 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
-    }
 
-    protected void onStart() {
-        super.onStart();
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
+    }
+
+    protected void onStart() {
+        super.onStart();
         if (!signInFlow && !explicitSignOut) {
             googleApiClient.connect();
         }
@@ -60,7 +61,9 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     protected void onPause() {
         super.onPause();
-        googleApiClient.disconnect();
+        if(googleApiClient.isConnected()) {
+            googleApiClient.disconnect();
+        }
     }
 
     protected void onResume() {
@@ -73,6 +76,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             Log.d("tag", "GoogleAPIClient already connected, button should not have been visible");
         } else {
             signInClicked = true;
+            explicitSignOut = false;
             googleApiClient.connect();
             Log.d("tag", "GoogleAPIClient connected via manual input");
         }

@@ -168,7 +168,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_hardcore_mode), score);
         int currentHighscore = highscore.getHighscore();
         createScoreDialog();
-        //loadPlayerRank();
+        loadPlayerRank();
         scoreResult.setText("Score: " + score);
         highscoreResult.setText("Highscore: " + currentHighscore);
     }

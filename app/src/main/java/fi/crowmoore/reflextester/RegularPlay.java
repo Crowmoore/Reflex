@@ -177,7 +177,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_regular_mode), score);
         int currentHighscore = highscore.getHighscore();
         createScoreDialog();
-        //loadPlayerRank();
+        loadPlayerRank();
         scoreResult.setText("Score: " + score);
         highscoreResult.setText("Highscore: " + currentHighscore);
     }
