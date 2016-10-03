@@ -91,8 +91,9 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     protected void onStart() {
         super.onStart();
         googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Games.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
         if (!signInFlow && !explicitSignOut) {
             googleApiClient.connect();
@@ -149,13 +150,13 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
 
     private void checkScoreForAchievement(int score) {
         if(score >= 10) {
-            achievementManager.unlockAchievement("Are you sure about this?", "CgkI1sfZypEcEAIQBQ");
+            achievementManager.unlockAchievement("Are you sure about this?", getString(R.string.achievement_are_you_sure_about_this));
         }
         if(score >= 100) {
-            achievementManager.unlockAchievement("Not going any farther", "CgkI1sfZypEcEAIQBg");
+            achievementManager.unlockAchievement("Not going any farther", getString(R.string.achievement_not_going_any_farther));
         }
         if(score >= 3000) {
-            achievementManager.unlockAchievement("Are you cheating?", "CgkI1sfZypEcEAIQBw");
+            achievementManager.unlockAchievement("Are you cheating?", getString(R.string.achievement_are_you_cheating));
         }
     }
 
@@ -164,17 +165,17 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Hardcore");
         boolean newHighscore = highscore.isHighscore();
-        Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_hardcore_id), score);
+        Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_hardcore_mode), score);
         int currentHighscore = highscore.getHighscore();
         createScoreDialog();
-        loadPlayerRank();
+        //loadPlayerRank();
         scoreResult.setText("Score: " + score);
         highscoreResult.setText("Highscore: " + currentHighscore);
     }
 
     private void loadPlayerRank() {
         try {
-            Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_hardcore_id), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
+            Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_hardcore_mode), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
                 @Override
                 public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
                     LeaderboardScore lbs = scoreResult.getScore();

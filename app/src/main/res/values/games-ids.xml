@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_id">966792733654</string>
+    <string name="package_name">fi.crowmoore.reflextester</string>
+    <string name="achievement_babys_first_steps">CgkI1sfZypEcEAIQAQ</string>
+    <string name="achievement_getting_the_hang_of_it">CgkI1sfZypEcEAIQAg</string>
+    <string name="achievement_master_of_focus">CgkI1sfZypEcEAIQAw</string>
+    <string name="achievement_insane_reflexes">CgkI1sfZypEcEAIQBA</string>
+    <string name="achievement_are_you_sure_about_this">CgkI1sfZypEcEAIQBQ</string>
+    <string name="achievement_not_going_any_farther">CgkI1sfZypEcEAIQBg</string>
+    <string name="achievement_are_you_cheating">CgkI1sfZypEcEAIQBw</string>
+    <string name="leaderboard_regular_mode">CgkI1sfZypEcEAIQCA</string>
+    <string name="leaderboard_hardcore_mode">CgkI1sfZypEcEAIQCQ</string>
+</resources>

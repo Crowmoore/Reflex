@@ -98,8 +98,9 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     protected void onStart() {
         super.onStart();
         googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Games.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
         if (!signInFlow && !explicitSignOut) {
             googleApiClient.connect();
@@ -155,16 +156,16 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
 
     private void checkScoreForAchievement(int score) {
         if(score >= 300) {
-            achievementManager.unlockAchievement("Baby's first steps", "CgkI1sfZypEcEAIQAQ");
+            achievementManager.unlockAchievement("Baby's first steps", getString(R.string.achievement_babys_first_steps));
         }
         if(score >= 1000) {
-            achievementManager.unlockAchievement("Getting the hang of it", "CgkI1sfZypEcEAIQAg");
+            achievementManager.unlockAchievement("Getting the hang of it", getString(R.string.achievement_getting_the_hang_of_it));
         }
         if(score >= 3000) {
-            achievementManager.unlockAchievement("Master of focus", "CgkI1sfZypEcEAIQAw");
+            achievementManager.unlockAchievement("Master of focus", getString(R.string.achievement_master_of_focus));
         }
         if(score >= 5000) {
-            achievementManager.unlockAchievement("Insane reflexes", "CgkI1sfZypEcEAIQBA");
+            achievementManager.unlockAchievement("Insane reflexes", getString(R.string.achievement_insane_reflexes));
         }
     }
 
@@ -173,17 +174,17 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Regular");
         boolean newHighscore = highscore.isHighscore();
-        Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_regular_id), score);
+        Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_regular_mode), score);
         int currentHighscore = highscore.getHighscore();
         createScoreDialog();
-        loadPlayerRank();
+        //loadPlayerRank();
         scoreResult.setText("Score: " + score);
         highscoreResult.setText("Highscore: " + currentHighscore);
     }
 
     private void loadPlayerRank() {
         try {
-            Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_hardcore_id), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
+            Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_regular_mode), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
                 @Override
                 public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
                     LeaderboardScore lbs = scoreResult.getScore();

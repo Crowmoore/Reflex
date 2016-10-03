@@ -44,9 +44,9 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     protected void onStart() {
         super.onStart();
         googleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Games.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
         if (!signInFlow && !explicitSignOut) {
             googleApiClient.connect();
@@ -105,11 +105,11 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     private void showLeaderboard(String type) {
         switch(type) {
             case "Regular": startActivityForResult(Games.Leaderboards.getLeaderboardIntent(googleApiClient,
-                            getString(R.string.leaderboard_regular_id)), REQUEST_LEADERBOARD);
+                            getString(R.string.leaderboard_regular_mode)), REQUEST_LEADERBOARD);
                             dialog.dismiss();
                             break;
             case "Hardcore": startActivityForResult(Games.Leaderboards.getLeaderboardIntent(googleApiClient,
-                             getString(R.string.leaderboard_hardcore_id)), REQUEST_LEADERBOARD);
+                             getString(R.string.leaderboard_hardcore_mode)), REQUEST_LEADERBOARD);
                              dialog.dismiss();
                              break;
         }
