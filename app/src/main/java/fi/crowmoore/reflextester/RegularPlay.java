@@ -146,11 +146,13 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
             return false;
         }
         if(command.equals(commandsList.get(FIRST))) {
-          commandsList.remove(0);
-          score += 10;
-          scoreView.setText(String.valueOf(score));
-          checkScoreForAchievement(score);
-          return true;
+            commandsList.remove(0);
+            score += 10;
+            scoreView.setText(String.valueOf(score));
+            if(googleApiClient != null && googleApiClient.isConnected()) {
+                checkScoreForAchievement(score);
+            }
+            return true;
         }
         return false;
     }
@@ -180,9 +182,28 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         }
         int currentHighscore = highscore.getHighscore();
         createScoreDialog();
+        incrementTimesPlayed();
         loadPlayerRank();
         scoreResult.setText("Score: " + score);
         highscoreResult.setText("Highscore: " + currentHighscore);
+    }
+
+    private void incrementTimesPlayed() {
+        int timesPlayed = settings.getInt("TimesPlayedRegular", 0);
+        timesPlayed = timesPlayed + 1;
+        editor.putInt("TimesPlayedRegular", timesPlayed);
+        editor.apply();
+        if(googleApiClient != null && googleApiClient.isConnected()) {
+            incrementAchievements();
+        }
+    }
+
+    private void incrementAchievements() {
+        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_rookie), 1);
+        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_seasoned), 1);
+        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_senior), 1);
+        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_expert), 1);
+        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_grandmaster), 1);
     }
 
     private void loadPlayerRank() {
@@ -331,7 +352,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         green = (ImageButton) findViewById(R.id.button_green);
         yellow = (ImageButton) findViewById(R.id.button_yellow);
 
-        final SharedPreferences settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        settings = getApplicationContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         muted = settings.getBoolean("Muted", false);
         explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
         editor = settings.edit();

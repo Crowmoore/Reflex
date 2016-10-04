@@ -9,6 +9,11 @@
     <string name="achievement_are_you_sure_about_this">CgkI1sfZypEcEAIQBQ</string>
     <string name="achievement_not_going_any_farther">CgkI1sfZypEcEAIQBg</string>
     <string name="achievement_are_you_cheating">CgkI1sfZypEcEAIQBw</string>
+    <string name="achievement_rookie">CgkI1sfZypEcEAIQDQ</string>
+    <string name="achievement_seasoned">CgkI1sfZypEcEAIQDg</string>
+    <string name="achievement_senior">CgkI1sfZypEcEAIQDw</string>
+    <string name="achievement_expert">CgkI1sfZypEcEAIQEA</string>
+    <string name="achievement_grandmaster">CgkI1sfZypEcEAIQEQ</string>
     <string name="leaderboard_regular_mode">CgkI1sfZypEcEAIQCA</string>
     <string name="leaderboard_hardcore_mode">CgkI1sfZypEcEAIQCQ</string>
 </resources>
