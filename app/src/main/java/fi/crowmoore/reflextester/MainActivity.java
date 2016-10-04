@@ -27,6 +27,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     private GoogleApiClient googleApiClient;
     public static final int RC_SIGN_IN = 9001;
     public static final int REQUEST_LEADERBOARD = 100;
+    public static final int REQUEST_ACHIEVEMENTS = 101;
     private LeaderboardDialogFragment dialog;
     private SignInDialogFragment signInDialog;
     private SharedPreferences settings;
@@ -203,7 +204,12 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             case R.id.sign_out_button: signOut(); break;
             case R.id.regular_leaderboard: showLeaderboard("Regular"); break;
             case R.id.hardcore_leaderboard: showLeaderboard("Hardcore"); break;
+            case R.id.achievements: showAchievements(); break;
         }
+    }
+
+    public void showAchievements() {
+        startActivityForResult(Games.Achievements.getAchievementsIntent(googleApiClient), REQUEST_ACHIEVEMENTS);
     }
 
     public static class LeaderboardDialogFragment extends DialogFragment {

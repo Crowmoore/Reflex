@@ -88,6 +88,17 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <ImageButton
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:onClick="onClick"
+        android:id="@+id/achievements"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/leaderboards"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/menu_achievements" />
+
     <ImageView
         android:layout_width="400dp"
         android:layout_height="150dp"
