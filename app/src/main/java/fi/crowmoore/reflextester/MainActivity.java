@@ -3,19 +3,23 @@ package fi.crowmoore.reflextester;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
 public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -24,15 +28,16 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     public static final int RC_SIGN_IN = 9001;
     public static final int REQUEST_LEADERBOARD = 100;
     private LeaderboardDialogFragment dialog;
+    private SignInDialogFragment signInDialog;
+    private SharedPreferences settings;
+    private SharedPreferences.Editor editor;
     private boolean signInClicked = false;
     private boolean resolvingConnectionFailure = false;
     private boolean autoStartSignInFlow = true;
     private boolean signInFlow = false;
     private boolean explicitSignOut = false;
     private TextView signInInfo;
-    private String name;
-    private String email;
-    private GoogleSignInOptions signInOptions;
+    private String mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,68 +46,91 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
-        signInInfo = (TextView) findViewById(R.id.sign_in_info);
+        signInInfo = (TextView) findViewById(R.id.info);
 
+        settings = getApplicationContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        editor = settings.edit();
+        explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
+
+        if(!explicitSignOut) {
+            buildApiClient();
+        } else {
+            findViewById(R.id.leaderboards).setEnabled(false);
+            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
+            signInInfo.setText(R.string.not_signed_in);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
+        if(googleApiClient == null && !explicitSignOut) {
+            buildApiClient();
+        }
+        if(googleApiClient != null && !explicitSignOut) {
+            googleApiClient.connect();
+        }
+        if(explicitSignOut) {
+            findViewById(R.id.leaderboards).setEnabled(false);
+            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
+            signInInfo.setText(R.string.not_signed_in);
+        }
+    }
+
+    public void buildApiClient() {
         googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
                 .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        googleApiClient.connect();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(googleApiClient.isConnected()) {
-            googleApiClient.disconnect();
-        }
-    }
-
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if(googleApiClient.isConnected()) {
-//            googleApiClient.disconnect();
-//        }
-//    }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if(!googleApiClient.isConnected()) {
-//            googleApiClient.connect();
-//        }
-//    }
-
     public void signIn() {
         signInClicked = true;
+        editor.putBoolean("ExplicitSignOut", false);
+        editor.apply();
+        if(googleApiClient == null) {
+            buildApiClient();
+        }
         googleApiClient.connect();
     }
 
     public void signOut() {
         signInClicked = false;
+        editor.putBoolean("ExplicitSignOut", true);
+        editor.apply();
         Games.signOut(googleApiClient);
-        if (googleApiClient != null && googleApiClient.isConnected()) {
+        if (googleApiClient.isConnected()) {
             googleApiClient.disconnect();
 
+            findViewById(R.id.leaderboards).setEnabled(false);
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_button).setVisibility(View.GONE);
-            signInInfo.setText("You need to be signed in to Google Play Services in order to get achievements and compete on the leaderboards");
+            signInInfo.setText(R.string.not_signed_in);
         }
     }
 
     public void startRegularPlay() {
-        startActivity(new Intent(MainActivity.this, RegularPlay.class));
+        if(googleApiClient != null && googleApiClient.isConnected()) {
+            startActivity(new Intent(MainActivity.this, RegularPlay.class));
+        } else {
+            mode = "Regular";
+            signInDialog = new SignInDialogFragment();
+            signInDialog.show(getFragmentManager(), null);
+        }
     }
 
     public void startHardcorePlay() {
-        startActivity(new Intent(MainActivity.this, HardcorePlay.class));
+        if(googleApiClient != null && googleApiClient.isConnected()) {
+            startActivity(new Intent(MainActivity.this, HardcorePlay.class));
+        } else {
+            mode = "Hardcore";
+            signInDialog = new SignInDialogFragment();
+            signInDialog.show(getFragmentManager(), null);
+        }
     }
 
     public void openOptions() {
@@ -125,9 +153,10 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.d("tag", "GoogleAPIClient Connected");
+        findViewById(R.id.leaderboards).setEnabled(true);
         findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
-        signInInfo.setText("You are signed in to Google Play Services");
+        signInInfo.setText(R.string.signed_in);
     }
 
     @Override
@@ -143,6 +172,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d("tag", "GoogleAPIClient connection failed. Resolving");
         if(resolvingConnectionFailure) {
             return;
         }
@@ -157,6 +187,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
                 resolvingConnectionFailure = false;
             }
         }
+        findViewById(R.id.leaderboards).setEnabled(true);
         findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
         findViewById(R.id.sign_out_button).setVisibility(View.GONE);
     }
@@ -184,6 +215,43 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             final View dialogView = inflater.inflate(R.layout.leaderboard_dialog, null);
             builder.setView(dialogView);
             return builder.create();
+        }
+    }
+
+    public static class SignInDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+
+            final View dialogView = inflater.inflate(R.layout.sign_in_dialog, null);
+            builder.setView(dialogView);
+            return builder.create();
+        }
+    }
+
+    public void onNotNowClicked(View view) {
+        editor.putBoolean("ExplicitSignOut", true);
+        editor.apply();
+        startGame();
+    }
+
+    public void onSignInClicked(View view) {
+        editor.putBoolean("ExplicitSignOut", false);
+        editor.apply();
+        if(googleApiClient == null) {
+            buildApiClient();
+        } else {
+            googleApiClient.connect();
+        }
+        startGame();
+    }
+
+    private void startGame() {
+        signInDialog.dismiss();
+        switch(mode) {
+            case "Regular": startActivity(new Intent(MainActivity.this, RegularPlay.class)); break;
+            case "Hardcore": startActivity(new Intent(MainActivity.this, HardcorePlay.class)); break;
         }
     }
 }

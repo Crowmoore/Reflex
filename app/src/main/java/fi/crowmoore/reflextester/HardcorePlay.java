@@ -84,35 +84,32 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
 
         initializeComponents();
 
-        GameLoop gameLoop = new GameLoop();
-        gameLoop.execute();
-    }
-
-    protected void onStart() {
-        super.onStart();
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
-        if (!signInFlow && !explicitSignOut) {
-            googleApiClient.connect();
-            achievementManager = new AchievementManager(this, googleApiClient);
-            Log.d("tag", "GoogleAPIClient connection called");
-            if(googleApiClient.isConnected()) {
-                Log.d("tag", "GoogleAPIClient connected");
-            } else {
-                Log.d("tag", "GoogleAPIClient not connected");
-            }
+        if(!explicitSignOut) {
+            buildApiClient();
+        } else {
+            GameLoop gameLoop = new GameLoop();
+            gameLoop.execute();
         }
     }
+
+    public void buildApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addConnectionCallbacks(this)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                .build();
+    }
+
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.d("tag", "GoogleAPIClient Connected");
+        GameLoop gameLoop = new GameLoop();
+        gameLoop.execute();
     }
     @Override
     public void onConnectionSuspended(int cause) {
-        Toast.makeText(getApplicationContext(), "Connection suspended", Toast.LENGTH_SHORT).show();
+        Log.d("tag", "GoogleAPIClient connection suspended");
+        googleApiClient.connect();
     }
 
     @Override
@@ -150,13 +147,13 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
 
     private void checkScoreForAchievement(int score) {
         if(score >= 10) {
-            achievementManager.unlockAchievement("Are you sure about this?", getString(R.string.achievement_are_you_sure_about_this));
+            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_are_you_sure_about_this));
         }
         if(score >= 100) {
-            achievementManager.unlockAchievement("Not going any farther", getString(R.string.achievement_not_going_any_farther));
+            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_not_going_any_farther));
         }
         if(score >= 3000) {
-            achievementManager.unlockAchievement("Are you cheating?", getString(R.string.achievement_are_you_cheating));
+            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_are_you_cheating));
         }
     }
 
@@ -165,7 +162,9 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Hardcore");
         boolean newHighscore = highscore.isHighscore();
-        Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_hardcore_mode), score);
+        if(googleApiClient != null && googleApiClient.isConnected()) {
+            Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_hardcore_mode), score);
+        }
         int currentHighscore = highscore.getHighscore();
         createScoreDialog();
         loadPlayerRank();
@@ -174,21 +173,20 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void loadPlayerRank() {
-        try {
+        if(googleApiClient != null && googleApiClient.isConnected()) {
             Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_hardcore_mode), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
                 @Override
                 public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
                     LeaderboardScore lbs = scoreResult.getScore();
-                    String rank = lbs.getDisplayRank();
-                    if(rank != null) {
-                        leaderboardRank.setText("Leaderboard rank: " + lbs.getDisplayRank());
-                    } else {
+                    String rank;
+                    try {
+                        rank = lbs.getDisplayRank();
+                        leaderboardRank.setText("Leaderboard rank: " + rank);
+                    } catch (Exception e) {
                         leaderboardRank.setText("Could not retrieve leaderboard rank");
                     }
                 }
             });
-        } catch (Exception e) {
-            leaderboardRank.setText("Could not retrieve leaderboard rank");
         }
     }
 
@@ -324,11 +322,11 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
 
     public void onBackButtonClick(View view) {
         scoreDialog.dismiss();
-        finish();
+        this.finish();
     }
     public void onResetButtonClicked(View view) {
         scoreDialog.dismiss();
-        HardcorePlay.this.recreate();
+        this.recreate();
     }
 
     private void initializeListeners() {

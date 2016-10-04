@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.AudioAttributes;
@@ -13,12 +14,14 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,6 +80,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private boolean muted;
     private boolean starting;
     private Dialog scoreDialog;
+    private SharedPreferences settings;
     private SharedPreferences.Editor editor;
     private AchievementManager achievementManager;
     private AdView adView;
@@ -91,35 +95,32 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
 
         initializeComponents();
 
-        GameLoop gameLoop = new GameLoop();
-        gameLoop.execute();
-    }
-
-    protected void onStart() {
-        super.onStart();
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
-        if (!signInFlow && !explicitSignOut) {
-            googleApiClient.connect();
-            achievementManager = new AchievementManager(this, googleApiClient);
-            Log.d("tag", "GoogleAPIClient connection called");
-            if(googleApiClient.isConnected()) {
-                Log.d("tag", "GoogleAPIClient connected");
-            } else {
-                Log.d("tag", "GoogleAPIClient not connected");
-            }
+        if(!explicitSignOut) {
+            buildApiClient();
+        } else {
+            GameLoop gameLoop = new GameLoop();
+            gameLoop.execute();
         }
     }
+
+    public void buildApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addConnectionCallbacks(this)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                .build();
+    }
+
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.d("tag", "GoogleAPIClient Connected");
+        GameLoop gameLoop = new GameLoop();
+        gameLoop.execute();
     }
     @Override
     public void onConnectionSuspended(int cause) {
-        Toast.makeText(getApplicationContext(), "Connection suspended", Toast.LENGTH_SHORT).show();
+        Log.d("tag", "GoogleAPIClient connection suspended");
+        googleApiClient.connect();
     }
 
     @Override
@@ -156,16 +157,16 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
 
     private void checkScoreForAchievement(int score) {
         if(score >= 300) {
-            achievementManager.unlockAchievement("Baby's first steps", getString(R.string.achievement_babys_first_steps));
+            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_babys_first_steps));
         }
         if(score >= 1000) {
-            achievementManager.unlockAchievement("Getting the hang of it", getString(R.string.achievement_getting_the_hang_of_it));
+            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_getting_the_hang_of_it));
         }
         if(score >= 3000) {
-            achievementManager.unlockAchievement("Master of focus", getString(R.string.achievement_master_of_focus));
+            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_master_of_focus));
         }
         if(score >= 5000) {
-            achievementManager.unlockAchievement("Insane reflexes", getString(R.string.achievement_insane_reflexes));
+            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_insane_reflexes));
         }
     }
 
@@ -174,7 +175,9 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Regular");
         boolean newHighscore = highscore.isHighscore();
-        Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_regular_mode), score);
+        if(googleApiClient != null && googleApiClient.isConnected()) {
+            Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_regular_mode), score);
+        }
         int currentHighscore = highscore.getHighscore();
         createScoreDialog();
         loadPlayerRank();
@@ -183,21 +186,20 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     private void loadPlayerRank() {
-        try {
+        if(googleApiClient != null && googleApiClient.isConnected()) {
             Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_regular_mode), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
                 @Override
                 public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
                     LeaderboardScore lbs = scoreResult.getScore();
-                    String rank = lbs.getDisplayRank();
-                    if(rank != null) {
-                        leaderboardRank.setText("Leaderboard rank: " + lbs.getDisplayRank());
-                    } else {
+                    String rank;
+                    try {
+                        rank = lbs.getDisplayRank();
+                        leaderboardRank.setText("Leaderboard rank: " + rank);
+                    } catch (Exception e) {
                         leaderboardRank.setText("Could not retrieve leaderboard rank");
                     }
                 }
             });
-        } catch (Exception e) {
-            leaderboardRank.setText("Could not retrieve leaderboard rank");
         }
     }
 
@@ -331,6 +333,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
 
         final SharedPreferences settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         muted = settings.getBoolean("Muted", false);
+        explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
         editor = settings.edit();
 
         createSoundPool();
@@ -353,11 +356,12 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
 
     public void onBackButtonClick(View view) {
         scoreDialog.dismiss();
-        finish();
+        this.finish();
     }
     public void onResetButtonClicked(View view) {
         scoreDialog.dismiss();
-        RegularPlay.this.recreate();
+        this.recreate();
+
     }
 
     private void initializeListeners() {
