@@ -66,6 +66,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private TextView scoreResult;
     private TextView highscoreResult;
     private TextView leaderboardRank;
+    private TextView countdownText;
     private List<String> commandsList = new ArrayList<>();
     private boolean running;
     private long interval;
@@ -80,6 +81,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private boolean muted;
     private boolean starting;
     private Dialog scoreDialog;
+    private Countdown countdown;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
     private AchievementManager achievementManager;
@@ -98,9 +100,14 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         if(!explicitSignOut) {
             buildApiClient();
         } else {
-            GameLoop gameLoop = new GameLoop();
-            gameLoop.execute();
+            startGame();
         }
+    }
+
+    public void startGame() {
+        countdown.execute();
+        GameLoop gameLoop = new GameLoop();
+        gameLoop.execute();
     }
 
     public void buildApiClient() {
@@ -114,8 +121,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.d("tag", "GoogleAPIClient Connected");
-        GameLoop gameLoop = new GameLoop();
-        gameLoop.execute();
+        startGame();
     }
     @Override
     public void onConnectionSuspended(int cause) {
@@ -228,7 +234,6 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         @Override
         protected Void doInBackground(Void... parameters) {
             while(running) {
-                if(starting) { showCountDown(); }
                 String command = getRandomCommand();
                 commandsList.add(command);
                 Bundle bundle = setupTaskCommandBundle(command, 1);
@@ -255,16 +260,30 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         }
     }
 
-    private void showCountDown() {
-        for (int i = 2; i > 0; i--) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Log.e("Error", "Interrupted!");
+    private class Countdown extends AsyncTask<Void, Integer, Void> {
+        @Override
+        protected Void doInBackground(Void... parameters) {
+            for (int i = 3; i > 0; i--) {
+                publishProgress(i);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.e("Error", "Interrupted!");
+                }
             }
+            return null;
         }
-        initializeListeners();
-        starting = false;
+
+        @Override
+        protected void onProgressUpdate(Integer... parameters) {
+            countdownText.setText("Starting in " + parameters[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Void parameters) {
+            countdownText.setVisibility(View.GONE);
+            initializeListeners();
+        }
     }
 
     @Override
@@ -351,6 +370,9 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         blue = (ImageButton) findViewById(R.id.button_blue);
         green = (ImageButton) findViewById(R.id.button_green);
         yellow = (ImageButton) findViewById(R.id.button_yellow);
+
+        countdownText = (TextView) findViewById(R.id.text_countdown);
+        countdown = new Countdown();
 
         settings = getApplicationContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         muted = settings.getBoolean("Muted", false);
