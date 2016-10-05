@@ -95,6 +95,10 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regular_play);
 
+        initializeGame();
+    }
+
+    public void initializeGame() {
         initializeComponents();
 
         if(!explicitSignOut) {

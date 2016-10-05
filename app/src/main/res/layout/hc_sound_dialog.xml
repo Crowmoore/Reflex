@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/no_sound_info"
-        android:text="Hardcore mode doesn't have any visual input about what button to press next. You must rely on your MEMORY and on the SOUNDS the buttons make. Only a madman would try this without sounds. Are you a madman?"
+        android:text="Hardcore mode doesn't have any visual indicator about what button to press next. You must rely on your MEMORY and on the SOUNDS the buttons make on activation. Only a madman would try this without sounds. Are you a madman?"
         android:fontFamily="casual"
         android:textSize="16sp"
         android:padding="2dp"

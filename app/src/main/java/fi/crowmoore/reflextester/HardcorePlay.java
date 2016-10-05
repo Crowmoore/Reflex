@@ -33,6 +33,8 @@ import com.google.android.gms.games.leaderboard.LeaderboardVariant;
 import com.google.android.gms.games.leaderboard.Leaderboards;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -59,6 +61,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private TextView scoreResult;
     private TextView highscoreResult;
     private TextView leaderboardRank;
+    private TextView countdownText;
     private List<String> commandsList = new ArrayList<>();
     private boolean running;
     private long interval;
@@ -75,6 +78,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private SharedPreferences.Editor editor;
     private AchievementManager achievementManager;
     private boolean starting;
+    private Countdown countdown;
     private boolean muted;
     private Dialog scoreDialog;
     private SoundDialogFragment soundDialog;
@@ -95,15 +99,22 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
             soundDialog = new SoundDialogFragment();
             soundDialog.show(getFragmentManager(), null);
         }
+    }
 
+    public void initializeGame() {
         initializeComponents();
 
         if(!explicitSignOut) {
             buildApiClient();
         } else {
-            GameLoop gameLoop = new GameLoop();
-            gameLoop.execute();
+            startGame();
         }
+    }
+
+    public void startGame() {
+        countdown.execute();
+        GameLoop gameLoop = new GameLoop();
+        gameLoop.execute();
     }
 
     public void buildApiClient() {
@@ -117,8 +128,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnected(Bundle connectionHint) {
         Log.d("tag", "GoogleAPIClient Connected");
-        GameLoop gameLoop = new GameLoop();
-        gameLoop.execute();
+        startGame();
     }
     @Override
     public void onConnectionSuspended(int cause) {
@@ -251,6 +261,32 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
+    private class Countdown extends AsyncTask<Void, Integer, Void> {
+        @Override
+        protected Void doInBackground(Void... parameters) {
+            for (int i = 3; i > 0; i--) {
+                publishProgress(i);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.e("Error", "Interrupted!");
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... parameters) {
+            countdownText.setText("Starting in " + parameters[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Void parameters) {
+            countdownText.setVisibility(View.GONE);
+            initializeListeners();
+        }
+    }
+
     private void showCountDown() {
         for (int i = 3; i > 0; i--) {
             try {
@@ -328,6 +364,9 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         blue = (ImageButton) findViewById(R.id.button_blue);
         green = (ImageButton) findViewById(R.id.button_green);
         yellow = (ImageButton) findViewById(R.id.button_yellow);
+
+        countdownText = (TextView) findViewById(R.id.text_countdown);
+        countdown = new Countdown();
 
         createSoundPool();
         low1 = soundPool.load(HardcorePlay.this, R.raw.low1, 1);
@@ -448,10 +487,15 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         editor.putBoolean("Muted", false);
         editor.apply();
         soundDialog.dismiss();
+        initializeGame();
     }
 
     public void onYesMadmanClicked(View view) {
         soundDialog.dismiss();
+        if(googleApiClient != null && googleApiClient.isConnected()) {
+            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_verified_madman));
+        }
+        initializeGame();
     }
 }
 /*

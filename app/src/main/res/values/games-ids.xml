@@ -19,6 +19,7 @@
     <string name="achievement_hardcore_senior">CgkI1sfZypEcEAIQFA</string>
     <string name="achievement_hardcore_expert">CgkI1sfZypEcEAIQFQ</string>
     <string name="achievement_hardcore_grandmaster">CgkI1sfZypEcEAIQFg</string>
+    <string name="achievement_verified_madman">CgkI1sfZypEcEAIQFw</string>
     <string name="leaderboard_regular_mode">CgkI1sfZypEcEAIQCA</string>
     <string name="leaderboard_hardcore_mode">CgkI1sfZypEcEAIQCQ</string>
 </resources>
