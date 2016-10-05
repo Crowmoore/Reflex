@@ -68,6 +68,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private int high1;
     private int high2;
     private AdView adView;
+    private SharedPreferences settings;
     private SharedPreferences.Editor editor;
     private AchievementManager achievementManager;
     private boolean starting;
@@ -167,9 +168,28 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         }
         int currentHighscore = highscore.getHighscore();
         createScoreDialog();
+        incrementTimesPlayed();
         loadPlayerRank();
         scoreResult.setText("Score: " + score);
         highscoreResult.setText("Highscore: " + currentHighscore);
+    }
+
+    private void incrementTimesPlayed() {
+        int timesPlayed = settings.getInt("TimesPlayedHardcore", 0);
+        timesPlayed = timesPlayed + 1;
+        editor.putInt("TimesPlayedHardcore", timesPlayed);
+        editor.apply();
+        if(googleApiClient != null && googleApiClient.isConnected()) {
+            incrementAchievements();
+        }
+    }
+
+    private void incrementAchievements() {
+        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_hardcore_rookie), 1);
+        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_hardcore_seasoned), 1);
+        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_hardcore_senior), 1);
+        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_hardcore_expert), 1);
+        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_hardcore_grandmaster), 1);
     }
 
     private void loadPlayerRank() {
@@ -298,7 +318,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         green = (ImageButton) findViewById(R.id.button_green);
         yellow = (ImageButton) findViewById(R.id.button_yellow);
 
-        final SharedPreferences settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         muted = settings.getBoolean("Muted", false);
         editor = settings.edit();
 

@@ -14,6 +14,11 @@
     <string name="achievement_senior">CgkI1sfZypEcEAIQDw</string>
     <string name="achievement_expert">CgkI1sfZypEcEAIQEA</string>
     <string name="achievement_grandmaster">CgkI1sfZypEcEAIQEQ</string>
+    <string name="achievement_hardcore_rookie">CgkI1sfZypEcEAIQEg</string>
+    <string name="achievement_hardcore_seasoned">CgkI1sfZypEcEAIQEw</string>
+    <string name="achievement_hardcore_senior">CgkI1sfZypEcEAIQFA</string>
+    <string name="achievement_hardcore_expert">CgkI1sfZypEcEAIQFQ</string>
+    <string name="achievement_hardcore_grandmaster">CgkI1sfZypEcEAIQFg</string>
     <string name="leaderboard_regular_mode">CgkI1sfZypEcEAIQCA</string>
     <string name="leaderboard_hardcore_mode">CgkI1sfZypEcEAIQCQ</string>
 </resources>
