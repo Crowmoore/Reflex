@@ -1,7 +1,9 @@
 package fi.crowmoore.reflextester;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -74,6 +77,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private boolean starting;
     private boolean muted;
     private Dialog scoreDialog;
+    private SoundDialogFragment soundDialog;
     private final int FIRST = 0;
     private final int DECREMENT_AMOUNT = 5;
     private final int MINIMUM_INTERVAL = 350;
@@ -82,6 +86,15 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hardcore_play);
+
+        settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        muted = settings.getBoolean("Muted", false);
+        editor = settings.edit();
+
+        if(muted) {
+            soundDialog = new SoundDialogFragment();
+            soundDialog.show(getFragmentManager(), null);
+        }
 
         initializeComponents();
 
@@ -318,10 +331,6 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         green = (ImageButton) findViewById(R.id.button_green);
         yellow = (ImageButton) findViewById(R.id.button_yellow);
 
-        settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        muted = settings.getBoolean("Muted", false);
-        editor = settings.edit();
-
         createSoundPool();
         low1 = soundPool.load(HardcorePlay.this, R.raw.low1, 1);
         low2 = soundPool.load(HardcorePlay.this, R.raw.low2, 1);
@@ -422,6 +431,29 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         leaderboardRank = (TextView) scoreDialog.findViewById(R.id.leaderboard_rank);
 
         scoreDialog.show();
+    }
+
+    public static class SoundDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+
+            final View dialogView = inflater.inflate(R.layout.hc_sound_dialog, null);
+            builder.setView(dialogView);
+            return builder.create();
+        }
+    }
+
+    public void onNoMadmanClicked(View view) {
+        muted = false;
+        editor.putBoolean("Muted", false);
+        editor.apply();
+        soundDialog.dismiss();
+    }
+
+    public void onYesMadmanClicked(View view) {
+        soundDialog.dismiss();
     }
 }
 /*
