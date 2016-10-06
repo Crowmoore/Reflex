@@ -67,7 +67,8 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private TextView scoreView;
     private TextView scoreResult;
     private TextView highscoreResult;
-    private TextView leaderboardRank;
+    private TextView tapCount;
+    private TextView averageTime;
     private TextView countdownText;
     private List<String> commandsList = new ArrayList<>();
     private List<Long> commandTimesList = new ArrayList<>();
@@ -88,7 +89,9 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
     private AchievementManager achievementManager;
+    private ReactionTime reactionTime;
     private AdView adView;
+    private int taps;
     private final int FIRST = 0;
     private final int DECREMENT_AMOUNT = 5;
     private final int MINIMUM_INTERVAL = 300;
@@ -160,6 +163,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         if(command.equals(commandsList.get(FIRST))) {
             score += getScore(commandTimesList.get(FIRST), System.currentTimeMillis());
             commandsList.remove(FIRST);
+            taps += 1;
             scoreView.setText(String.valueOf(score));
             if(googleApiClient != null && googleApiClient.isConnected()) {
                 checkScoreForAchievement(score);
@@ -195,7 +199,8 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         int currentHighscore = highscore.getHighscore();
         createScoreDialog();
         incrementTimesPlayed();
-        loadPlayerRank();
+        tapCount.setText("Taps: " + taps);
+        averageTime.setText(reactionTime.getAverageReactionTime());
         scoreResult.setText("Score: " + score);
         if(newHighscore) {
             highscoreResult.setText("New highscore: " + currentHighscore);
@@ -223,23 +228,23 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         achievementManager.incrementAchievement(getString(R.string.achievement_grandmaster), 1);
     }
 
-    private void loadPlayerRank() {
-        if(googleApiClient != null && googleApiClient.isConnected()) {
-            Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_regular_mode), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
-                @Override
-                public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
-                    LeaderboardScore lbs = scoreResult.getScore();
-                    String rank;
-                    try {
-                        rank = lbs.getDisplayRank();
-                        leaderboardRank.setText("Leaderboard rank: " + rank);
-                    } catch (Exception e) {
-                        leaderboardRank.setText("Could not retrieve leaderboard rank");
-                    }
-                }
-            });
-        }
-    }
+//    private void loadPlayerRank() {
+//        if(googleApiClient != null && googleApiClient.isConnected()) {
+//            Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_regular_mode), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
+//                @Override
+//                public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
+//                    LeaderboardScore lbs = scoreResult.getScore();
+//                    String rank;
+//                    try {
+//                        rank = lbs.getDisplayRank();
+//                        leaderboardRank.setText("Leaderboard rank: " + rank);
+//                    } catch (Exception e) {
+//                        leaderboardRank.setText("Could not retrieve leaderboard rank");
+//                    }
+//                }
+//            });
+//        }
+//    }
 
     private class GameLoop extends AsyncTask<Void, Bundle, Void> {
         @Override
@@ -360,6 +365,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     private int getScore(long startTime, long endTime) {
+        reactionTime.addAverageTimeToList(startTime, endTime);
         commandTimesList.remove(FIRST);
         long baseScore = 10;
         long difference = endTime - startTime;
@@ -403,6 +409,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         muted = settings.getBoolean("Muted", false);
         explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
         editor = settings.edit();
+        reactionTime = new ReactionTime();
 
         createSoundPool();
         low1 = soundPool.load(RegularPlay.this, R.raw.low1, 1);
@@ -416,6 +423,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         //AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
 
+        taps = 0;
         selection = 0;
         previous = 0;
         starting = true;
@@ -502,7 +510,8 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
 
         scoreResult = (TextView) scoreDialog.findViewById(R.id.score_result);
         highscoreResult = (TextView) scoreDialog.findViewById(R.id.highscore_result);
-        leaderboardRank = (TextView) scoreDialog.findViewById(R.id.leaderboard_rank);
+        tapCount = (TextView) scoreDialog.findViewById(R.id.tap_count);
+        averageTime = (TextView) scoreDialog.findViewById(R.id.reaction_time);
 
         scoreDialog.show();
     }
