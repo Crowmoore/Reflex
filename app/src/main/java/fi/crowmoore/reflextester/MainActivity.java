@@ -46,8 +46,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
+        setOnClickListeners();
         signInInfo = (TextView) findViewById(R.id.info);
 
         settings = getApplicationContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
@@ -62,6 +61,16 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             findViewById(R.id.sign_out_button).setVisibility(View.GONE);
             signInInfo.setText(R.string.not_signed_in);
         }
+    }
+
+    protected void setOnClickListeners() {
+        findViewById(R.id.sign_in_button).setOnClickListener(this);
+        findViewById(R.id.sign_out_button).setOnClickListener(this);
+        findViewById(R.id.regular_play).setOnClickListener(this);
+        findViewById(R.id.hardcore_play).setOnClickListener(this);
+        findViewById(R.id.options).setOnClickListener(this);
+        findViewById(R.id.leaderboards).setOnClickListener(this);
+        findViewById(R.id.achievements).setOnClickListener(this);
     }
 
     @Override
