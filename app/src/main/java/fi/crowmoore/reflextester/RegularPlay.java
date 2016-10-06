@@ -110,8 +110,6 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
 
     public void startGame() {
         countdown.execute();
-        GameLoop gameLoop = new GameLoop();
-        gameLoop.execute();
     }
 
     public void buildApiClient() {
@@ -287,6 +285,8 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         protected void onPostExecute(Void parameters) {
             countdownText.setVisibility(View.GONE);
             initializeListeners();
+            GameLoop gameLoop = new GameLoop();
+            gameLoop.execute();
         }
     }
 

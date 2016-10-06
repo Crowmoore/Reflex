@@ -68,6 +68,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private int selection;
     private int previous;
     private SoundPool soundPool;
+    private boolean madman = false;
     private boolean loaded;
     private int low1;
     private int low2;
@@ -98,6 +99,8 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         if(muted) {
             soundDialog = new SoundDialogFragment();
             soundDialog.show(getFragmentManager(), null);
+        } else {
+            initializeGame();
         }
     }
 
@@ -112,9 +115,10 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     }
 
     public void startGame() {
+        if(madman && googleApiClient != null && googleApiClient.isConnected()) {
+            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_verified_madman));
+        }
         countdown.execute();
-        GameLoop gameLoop = new GameLoop();
-        gameLoop.execute();
     }
 
     public void buildApiClient() {
@@ -163,7 +167,9 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
             commandsList.remove(0);
             score += 10;
             scoreView.setText(String.valueOf(score));
-            checkScoreForAchievement(score);
+            if(googleApiClient != null && googleApiClient.isConnected()) {
+                checkScoreForAchievement(score);
+            }
             return true;
         }
         return false;
@@ -284,6 +290,8 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         protected void onPostExecute(Void parameters) {
             countdownText.setVisibility(View.GONE);
             initializeListeners();
+            GameLoop gameLoop = new GameLoop();
+            gameLoop.execute();
         }
     }
 
@@ -491,10 +499,8 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     }
 
     public void onYesMadmanClicked(View view) {
+        madman = true;
         soundDialog.dismiss();
-        if(googleApiClient != null && googleApiClient.isConnected()) {
-            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_verified_madman));
-        }
         initializeGame();
     }
 }
