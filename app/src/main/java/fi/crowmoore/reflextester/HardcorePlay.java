@@ -63,6 +63,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private TextView leaderboardRank;
     private TextView countdownText;
     private List<String> commandsList = new ArrayList<>();
+    private List<Long> commandTimesList = new ArrayList<>();
     private boolean running;
     private long interval;
     private int selection;
@@ -84,8 +85,8 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private Dialog scoreDialog;
     private SoundDialogFragment soundDialog;
     private final int FIRST = 0;
-    private final int DECREMENT_AMOUNT = 5;
-    private final int MINIMUM_INTERVAL = 350;
+    private final int DECREMENT_AMOUNT = 2;
+    private final int MINIMUM_INTERVAL = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,13 +161,13 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private boolean checkIfCorrect(String command) {
-        if(commandsList.isEmpty()) {
+        if(commandsList.isEmpty() || commandTimesList.isEmpty()) {
             return false;
         }
 
         if(command.equals(commandsList.get(FIRST))) {
+            score += getScore(commandTimesList.get(FIRST), System.currentTimeMillis());
             commandsList.remove(0);
-            score += 10;
             scoreView.setText(String.valueOf(score));
             if(googleApiClient != null && googleApiClient.isConnected()) {
                 checkScoreForAchievement(score);
@@ -251,6 +252,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
                 if(starting) { showCountDown(); }
                 String command = getRandomCommand();
                 commandsList.add(command);
+                commandTimesList.add(System.currentTimeMillis());
                 Bundle bundle = setupTaskCommandBundle(command, 1);
                 publishProgress(bundle);
                 try {
@@ -350,6 +352,17 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
             soundPool.stop(sound);
             soundPool.play(sound, 1, 1, 1, 0, 1f);
         }
+    }
+
+    private int getScore(long startTime, long endTime) {
+        commandTimesList.remove(FIRST);
+        long baseScore = 10;
+        long difference = endTime - startTime;
+        long bonus = (1000 - difference) / 100;
+        if(bonus < 1) {
+            bonus = 0;
+        }
+        return (int) (baseScore + bonus);
     }
 
     private String getRandomCommand() {

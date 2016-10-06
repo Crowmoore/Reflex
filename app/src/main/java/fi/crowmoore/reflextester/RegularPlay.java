@@ -40,6 +40,7 @@ import com.google.example.games.basegameutils.BaseGameUtils;
 
 import org.w3c.dom.Text;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -68,6 +69,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private TextView leaderboardRank;
     private TextView countdownText;
     private List<String> commandsList = new ArrayList<>();
+    private List<Long> commandTimesList = new ArrayList<>();
     private boolean running;
     private long interval;
     private int selection;
@@ -151,12 +153,12 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     private boolean checkIfCorrect(String command) {
-        if(commandsList.isEmpty()) {
+        if(commandsList.isEmpty() || commandTimesList.isEmpty()) {
             return false;
         }
         if(command.equals(commandsList.get(FIRST))) {
-            commandsList.remove(0);
-            score += 10;
+            score += getScore(commandTimesList.get(FIRST), System.currentTimeMillis());
+            commandsList.remove(FIRST);
             scoreView.setText(String.valueOf(score));
             if(googleApiClient != null && googleApiClient.isConnected()) {
                 checkScoreForAchievement(score);
@@ -244,6 +246,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
             while(running) {
                 String command = getRandomCommand();
                 commandsList.add(command);
+                commandTimesList.add(System.currentTimeMillis());
                 Bundle bundle = setupTaskCommandBundle(command, 1);
                 publishProgress(bundle);
                 try {
@@ -353,6 +356,17 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
             soundPool.stop(sound);
             soundPool.play(sound, 1, 1, 1, 0, 1f);
         }
+    }
+
+    private int getScore(long startTime, long endTime) {
+        commandTimesList.remove(FIRST);
+        long baseScore = 10;
+        long difference = endTime - startTime;
+        long bonus = (1000 - difference) / 100;
+        if(bonus < 1) {
+            bonus = 0;
+        }
+        return (int) (baseScore + bonus);
     }
 
     private String getRandomCommand() {
