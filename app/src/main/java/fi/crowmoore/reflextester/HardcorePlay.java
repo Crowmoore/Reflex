@@ -116,7 +116,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
 
     public void startGame() {
         if(madman && googleApiClient != null && googleApiClient.isConnected()) {
-            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_verified_madman));
+            achievementManager.unlockAchievement(getString(R.string.achievement_verified_madman));
         }
         countdown.execute();
     }
@@ -127,6 +127,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
                 .addConnectionCallbacks(this)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
+        achievementManager = new AchievementManager(googleApiClient);
     }
 
     @Override
@@ -177,13 +178,13 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
 
     private void checkScoreForAchievement(int score) {
         if(score >= 10) {
-            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_are_you_sure_about_this));
+            achievementManager.unlockAchievement(getString(R.string.achievement_are_you_sure_about_this));
         }
         if(score >= 100) {
-            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_not_going_any_farther));
+            achievementManager.unlockAchievement(getString(R.string.achievement_not_going_any_farther));
         }
         if(score >= 3000) {
-            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_are_you_cheating));
+            achievementManager.unlockAchievement(getString(R.string.achievement_are_you_cheating));
         }
     }
 
@@ -214,11 +215,11 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void incrementAchievements() {
-        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_hardcore_rookie), 1);
-        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_hardcore_seasoned), 1);
-        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_hardcore_senior), 1);
-        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_hardcore_expert), 1);
-        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_hardcore_grandmaster), 1);
+        achievementManager.incrementAchievement(getString(R.string.achievement_hardcore_rookie), 1);
+        achievementManager.incrementAchievement(getString(R.string.achievement_hardcore_seasoned), 1);
+        achievementManager.incrementAchievement(getString(R.string.achievement_hardcore_senior), 1);
+        achievementManager.incrementAchievement(getString(R.string.achievement_hardcore_expert), 1);
+        achievementManager.incrementAchievement(getString(R.string.achievement_hardcore_grandmaster), 1);
     }
 
     private void loadPlayerRank() {

@@ -118,6 +118,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
                 .addConnectionCallbacks(this)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
+        achievementManager = new AchievementManager(googleApiClient);
     }
 
     @Override
@@ -167,16 +168,16 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
 
     private void checkScoreForAchievement(int score) {
         if(score >= 300) {
-            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_babys_first_steps));
+            achievementManager.unlockAchievement(getString(R.string.achievement_babys_first_steps));
         }
         if(score >= 1000) {
-            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_getting_the_hang_of_it));
+            achievementManager.unlockAchievement(getString(R.string.achievement_getting_the_hang_of_it));
         }
         if(score >= 3000) {
-            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_master_of_focus));
+            achievementManager.unlockAchievement(getString(R.string.achievement_master_of_focus));
         }
         if(score >= 5000) {
-            Games.Achievements.unlock(googleApiClient, getString(R.string.achievement_insane_reflexes));
+            achievementManager.unlockAchievement(getString(R.string.achievement_insane_reflexes));
         }
     }
 
@@ -207,11 +208,11 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     private void incrementAchievements() {
-        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_rookie), 1);
-        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_seasoned), 1);
-        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_senior), 1);
-        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_expert), 1);
-        Games.Achievements.increment(googleApiClient, getString(R.string.achievement_grandmaster), 1);
+        achievementManager.incrementAchievement(getString(R.string.achievement_rookie), 1);
+        achievementManager.incrementAchievement(getString(R.string.achievement_seasoned), 1);
+        achievementManager.incrementAchievement(getString(R.string.achievement_senior), 1);
+        achievementManager.incrementAchievement(getString(R.string.achievement_expert), 1);
+        achievementManager.incrementAchievement(getString(R.string.achievement_grandmaster), 1);
     }
 
     private void loadPlayerRank() {

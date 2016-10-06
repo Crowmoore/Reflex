@@ -32,6 +32,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     private SignInDialogFragment signInDialog;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
+    private AchievementManager achievementManager;
     private boolean signInClicked = false;
     private boolean resolvingConnectionFailure = false;
     private boolean autoStartSignInFlow = true;
@@ -87,6 +88,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
                 .addConnectionCallbacks(this)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
+        achievementManager = new AchievementManager(googleApiClient);
     }
 
     public void signIn() {
@@ -209,7 +211,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     }
 
     public void showAchievements() {
-        startActivityForResult(Games.Achievements.getAchievementsIntent(googleApiClient), REQUEST_ACHIEVEMENTS);
+        startActivityForResult(achievementManager.getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
     }
 
     public static class LeaderboardDialogFragment extends DialogFragment {
