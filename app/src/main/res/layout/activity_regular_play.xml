@@ -13,30 +13,31 @@
     tools:context="fi.crowmoore.reflextester.RegularPlay"
     android:background="@android:color/black">
 
-    <ImageButton
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/red_off"
-        android:background="@null"
+        app:srcCompat="@drawable/ic_red_off"
+        android:background="@android:color/transparent"
         android:id="@+id/button_red"
         android:layout_alignTop="@+id/button_blue"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <ImageButton
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/yellow_off"
+        app:srcCompat="@drawable/ic_yellow_off"
+        android:background="@android:color/transparent"
         android:id="@+id/button_yellow"
         android:layout_alignTop="@+id/button_green"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <ImageButton
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/blue_off"
-        android:background="@null"
+        app:srcCompat="@drawable/ic_blue_off"
+        android:background="@android:color/transparent"
         android:layout_marginTop="110dp"
         android:id="@+id/button_blue"
         android:layout_alignParentTop="true"
@@ -67,10 +68,11 @@
         android:fontFamily="casual"
         android:textColor="@android:color/white" />
 
-    <ImageButton
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/green_off"
+        app:srcCompat="@drawable/ic_green_off"
+        android:background="@android:color/transparent"
         android:layout_marginTop="41dp"
         android:id="@+id/button_green"
         android:layout_below="@+id/button_blue"

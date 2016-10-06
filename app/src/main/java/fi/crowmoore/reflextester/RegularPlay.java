@@ -17,6 +17,7 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageButton;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -59,10 +60,10 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private boolean explicitSignOut = false;
 
     private int score;
-    private ImageButton red;
-    private ImageButton blue;
-    private ImageButton green;
-    private ImageButton yellow;
+    private AppCompatImageButton red;
+    private AppCompatImageButton blue;
+    private AppCompatImageButton green;
+    private AppCompatImageButton yellow;
     private TextView scoreView;
     private TextView scoreResult;
     private TextView highscoreResult;
@@ -327,25 +328,25 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
 
     private void removeHighlight(String command) {
         switch(command) {
-            case "Blue": blue.setImageResource(R.drawable.blue_off); break;
-            case "Red": red.setImageResource(R.drawable.red_off); break;
-            case "Green": green.setImageResource(R.drawable.green_off); break;
-            case "Yellow": yellow.setImageResource(R.drawable.yellow_off); break;
+            case "Blue": blue.setImageResource(R.drawable.ic_blue_off); break;
+            case "Red": red.setImageResource(R.drawable.ic_red_off); break;
+            case "Green": green.setImageResource(R.drawable.ic_green_off); break;
+            case "Yellow": yellow.setImageResource(R.drawable.ic_yellow_off); break;
         }
     }
 
     private void highlightCommand(String command) {
         switch(command) {
-            case "Blue": blue.setImageResource(R.drawable.blue_on);
+            case "Blue": blue.setImageResource(R.drawable.ic_blue_on);
                          playSound(low1);
                          break;
-            case "Red": red.setImageResource(R.drawable.red_on);
+            case "Red": red.setImageResource(R.drawable.ic_red_on);
                         playSound(low2);
                         break;
-            case "Green": green.setImageResource(R.drawable.green_on);
+            case "Green": green.setImageResource(R.drawable.ic_green_on);
                           playSound(high1);
                           break;
-            case "Yellow": yellow.setImageResource(R.drawable.yellow_on);
+            case "Yellow": yellow.setImageResource(R.drawable.ic_yellow_on);
                            playSound(high2);
                            break;
         }
@@ -390,10 +391,10 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         loaded = false;
 
         scoreView = (TextView) findViewById(R.id.score);
-        red = (ImageButton) findViewById(R.id.button_red);
-        blue = (ImageButton) findViewById(R.id.button_blue);
-        green = (ImageButton) findViewById(R.id.button_green);
-        yellow = (ImageButton) findViewById(R.id.button_yellow);
+        red = (AppCompatImageButton) findViewById(R.id.button_red);
+        blue = (AppCompatImageButton) findViewById(R.id.button_blue);
+        green = (AppCompatImageButton) findViewById(R.id.button_green);
+        yellow = (AppCompatImageButton) findViewById(R.id.button_yellow);
 
         countdownText = (TextView) findViewById(R.id.text_countdown);
         countdown = new Countdown();

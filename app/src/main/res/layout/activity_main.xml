@@ -100,7 +100,7 @@
         app:srcCompat="@drawable/ic_menu_achievements" />
 
     <android.support.v7.widget.AppCompatImageView
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="150dp"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
