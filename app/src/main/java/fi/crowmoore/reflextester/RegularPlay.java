@@ -194,7 +194,12 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         incrementTimesPlayed();
         loadPlayerRank();
         scoreResult.setText("Score: " + score);
-        highscoreResult.setText("Highscore: " + currentHighscore);
+        if(newHighscore) {
+            highscoreResult.setText("New highscore: " + currentHighscore);
+        } else {
+            highscoreResult.setText("Highscore: " + currentHighscore);
+        }
+
     }
 
     private void incrementTimesPlayed() {
