@@ -63,8 +63,8 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private TextView tapCount;
     private TextView averageTime;
     private TextView countdownText;
-    private List<String> commandsList = new ArrayList<>();
-    private List<Long> commandTimesList = new ArrayList<>();
+    private List<String> commandsList;
+    private List<Long> commandTimesList;
     private boolean running;
     private long interval;
     private int selection;
@@ -111,7 +111,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     public void initializeGame() {
         initializeComponents();
 
-        if(!explicitSignOut) {
+        if(!explicitSignOut && googleApiClient == null) {
             buildApiClient();
         } else {
             startGame();
@@ -398,7 +398,10 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         yellow = (ImageButton) findViewById(R.id.button_yellow);
 
         countdownText = (TextView) findViewById(R.id.text_countdown);
+        countdownText.setVisibility(View.VISIBLE);
         countdown = new Countdown();
+        commandsList = new ArrayList<>();
+        commandTimesList = new ArrayList<>();
 
         createSoundPool();
         low1 = soundPool.load(HardcorePlay.this, R.raw.low1, 1);
@@ -423,10 +426,11 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     public void onBackButtonClick(View view) {
         scoreDialog.dismiss();
         this.finish();
+        overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
     }
     public void onResetButtonClicked(View view) {
         scoreDialog.dismiss();
-        this.recreate();
+        initializeGame();
     }
 
     private void initializeListeners() {

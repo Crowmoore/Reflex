@@ -43,5 +43,6 @@ public class OptionsActivity extends AppCompatActivity {
     }
     public void onBackButtonClick(View view) {
         finish();
+        overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
     }
 }

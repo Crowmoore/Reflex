@@ -70,8 +70,8 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private TextView tapCount;
     private TextView averageTime;
     private TextView countdownText;
-    private List<String> commandsList = new ArrayList<>();
-    private List<Long> commandTimesList = new ArrayList<>();
+    private List<String> commandsList;
+    private List<Long> commandTimesList;
     private boolean running;
     private long interval;
     private int selection;
@@ -107,7 +107,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     public void initializeGame() {
         initializeComponents();
 
-        if(!explicitSignOut) {
+        if(!explicitSignOut && googleApiClient == null) {
             buildApiClient();
         } else {
             startGame();
@@ -397,13 +397,17 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         loaded = false;
 
         scoreView = (TextView) findViewById(R.id.score);
+        scoreView.setText("0");
         red = (AppCompatImageButton) findViewById(R.id.button_red);
         blue = (AppCompatImageButton) findViewById(R.id.button_blue);
         green = (AppCompatImageButton) findViewById(R.id.button_green);
         yellow = (AppCompatImageButton) findViewById(R.id.button_yellow);
 
         countdownText = (TextView) findViewById(R.id.text_countdown);
+        countdownText.setVisibility(View.VISIBLE);
         countdown = new Countdown();
+        commandsList = new ArrayList<>();
+        commandTimesList = new ArrayList<>();
 
         settings = getApplicationContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         muted = settings.getBoolean("Muted", false);
@@ -433,10 +437,11 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     public void onBackButtonClick(View view) {
         scoreDialog.dismiss();
         this.finish();
+        overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
     }
     public void onResetButtonClicked(View view) {
         scoreDialog.dismiss();
-        this.recreate();
+        initializeGame();
 
     }
 
