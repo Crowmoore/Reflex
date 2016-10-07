@@ -44,6 +44,7 @@ import org.w3c.dom.Text;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import static fi.crowmoore.reflextester.MainActivity.RC_SIGN_IN;
@@ -200,13 +201,40 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         createScoreDialog();
         incrementTimesPlayed();
         tapCount.setText("Taps: " + taps);
-        averageTime.setText(reactionTime.getAverageReactionTime());
+        gatherStatistics();
+        float average = reactionTime.getAverageReactionTime();
+        averageTime.setText(String.format(Locale.US, "Average reaction time: %.02f sec", average));
         scoreResult.setText("Score: " + score);
         if(newHighscore) {
             highscoreResult.setText("New highscore: " + currentHighscore);
         } else {
             highscoreResult.setText("Highscore: " + currentHighscore);
         }
+
+    }
+
+    private void gatherStatistics() {
+        int lifetimeTaps = settings.getInt("TapCount", 0) + taps;
+        Log.d("stats", "Lifetime taps " + lifetimeTaps);
+        editor.putInt("TapCount", lifetimeTaps);
+        editor.apply();
+
+        int lifetimeRegularGames = settings.getInt("RegularGames", 0) + 1;
+        Log.d("stats", "Regular games played " + lifetimeRegularGames);
+        editor.putInt("RegularGames", lifetimeRegularGames);
+        editor.apply();
+
+        float averageReactionTime = settings.getFloat("ReactionTime", 0);
+        if(averageReactionTime == 0) {
+            editor.putFloat("ReactionTime", reactionTime.getAverageReactionTime());
+            editor.apply();
+        } else {
+            float average = (averageReactionTime + reactionTime.getAverageReactionTime()) / 2;
+            editor.putFloat("ReactionTime", average);
+            editor.apply();
+            Log.d("stats", "Average " + average);
+        }
+
 
     }
 

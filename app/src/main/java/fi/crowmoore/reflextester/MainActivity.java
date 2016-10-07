@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +46,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.fade_in, R.anim.close_activity);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_main);
 
         setOnClickListeners();
@@ -54,7 +56,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         editor = settings.edit();
         explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
 
-        if(!explicitSignOut) {
+        if(!explicitSignOut && googleApiClient == null) {
             buildApiClient();
         } else {
             findViewById(R.id.leaderboards).setEnabled(false);

@@ -12,29 +12,28 @@ import java.util.Locale;
 
 public class ReactionTime {
 
-    private List<Long> averages;
+    private List<Long> times;
 
     public ReactionTime() {
-        this.averages = new ArrayList<>();
+        this.times = new ArrayList<>();
     }
 
     protected void addAverageTimeToList(long start, long end) {
         long average = end - start;
         Log.d("average", "Average: " + average);
-        averages.add(average);
+        times.add(average);
     }
 
-    protected String getAverageReactionTime() {
-        if(averages.isEmpty()) {
-            return "Average reaction time: 0";
+    protected float getAverageReactionTime() {
+        if(times.isEmpty()) {
+            return 0;
         }
         long sum = 0;
-        for (long time : averages) {
+        for (long time : times) {
             sum += time;
         }
-        float average = sum / averages.size();
+        float average = sum / times.size();
         float averageAsSeconds = average / 1000;
-        String result = String.format(Locale.US, "Average reaction time: %.02f sec", averageAsSeconds);
-        return result;
+        return averageAsSeconds;
     }
 }
