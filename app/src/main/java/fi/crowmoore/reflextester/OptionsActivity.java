@@ -4,22 +4,46 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
-public class OptionsActivity extends AppCompatActivity {
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
+import com.google.example.games.basegameutils.BaseGameUtils;
+
+import static fi.crowmoore.reflextester.MainActivity.RC_SIGN_IN;
+
+public class OptionsActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     public static final String PREFERENCES = "PreferencesFile";
+    private TextView signInInfo;
+    private GoogleApiClient googleApiClient;
+    private boolean signInClicked = false;
+    private boolean resolvingConnectionFailure = false;
+    private boolean autoStartSignInFlow = true;
+    private boolean signInFlow = false;
+    private boolean explicitSignOut = false;
+    private SharedPreferences settings;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options);
 
-        final SharedPreferences settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = settings.edit();
+        signInInfo = (TextView) findViewById(R.id.info);
+        settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        editor = settings.edit();
+
+        findViewById(R.id.sign_in_button).setOnClickListener(this);
+        findViewById(R.id.sign_out_button).setOnClickListener(this);
+        findViewById(R.id.button_back).setOnClickListener(this);
 
         CheckBox muteCheckBox = (CheckBox) findViewById(R.id.mute_sound);
 
@@ -40,9 +64,96 @@ public class OptionsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if(!explicitSignOut && googleApiClient == null) {
+            buildApiClient();
+        } else {
+            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
+            signInInfo.setText(R.string.not_signed_in);
+        }
     }
-    public void onBackButtonClick(View view) {
+
+    public void buildApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addConnectionCallbacks(this)
+                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                .build();
+    }
+
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        Log.d("tag", "GoogleAPIClient Connected");
+        findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+        findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
+        signInInfo.setText(R.string.signed_in);
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        Log.d("tag", "GoogleAPIClient connection suspended");
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d("tag", "GoogleAPIClient connection failed. Resolving");
+        if(resolvingConnectionFailure) {
+            return;
+        }
+        if(signInClicked || autoStartSignInFlow) {
+            autoStartSignInFlow = false;
+            signInClicked = false;
+            resolvingConnectionFailure = true;
+
+            if(!BaseGameUtils.resolveConnectionFailure(this,
+                    googleApiClient, connectionResult,
+                    RC_SIGN_IN, getString(R.string.sign_in_error))) {
+                resolvingConnectionFailure = false;
+            }
+        }
+    }
+
+    public void signIn() {
+        signInClicked = true;
+        editor.putBoolean("ExplicitSignOut", false);
+        editor.apply();
+        if(googleApiClient == null) {
+            buildApiClient();
+        }
+        googleApiClient.connect();
+        findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+        findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
+        signInInfo.setText(R.string.signed_in);
+    }
+
+    public void signOut() {
+        signInClicked = false;
+        editor.putBoolean("ExplicitSignOut", true);
+        editor.apply();
+        if (googleApiClient.isConnected()) {
+            Games.signOut(googleApiClient);
+            googleApiClient.disconnect();
+            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
+            signInInfo.setText(R.string.not_signed_in);
+        }
+
+    }
+
+    public void onBackButtonClick() {
         finish();
         overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.sign_in_button: signIn(); break;
+            case R.id.sign_out_button: signOut(); break;
+            case R.id.button_back: onBackButtonClick(); break;
+        }
     }
 }

@@ -50,7 +50,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         setContentView(R.layout.activity_main);
 
         setOnClickListeners();
-        signInInfo = (TextView) findViewById(R.id.info);
 
         settings = getApplicationContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         editor = settings.edit();
@@ -61,15 +60,10 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         } else {
             findViewById(R.id.leaderboards).setEnabled(false);
             findViewById(R.id.achievements).setEnabled(false);
-            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
-            signInInfo.setText(R.string.not_signed_in);
         }
     }
 
     protected void setOnClickListeners() {
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
         findViewById(R.id.regular_play).setOnClickListener(this);
         findViewById(R.id.hardcore_play).setOnClickListener(this);
         findViewById(R.id.options).setOnClickListener(this);
@@ -90,9 +84,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         if(explicitSignOut) {
             findViewById(R.id.leaderboards).setEnabled(false);
             findViewById(R.id.achievements).setEnabled(false);
-            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
-            signInInfo.setText(R.string.not_signed_in);
         }
     }
 
@@ -125,9 +116,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
             findViewById(R.id.leaderboards).setEnabled(false);
             findViewById(R.id.achievements).setEnabled(false);
-            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
-            signInInfo.setText(R.string.not_signed_in);
         }
     }
 
@@ -176,9 +164,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         Log.d("tag", "GoogleAPIClient Connected");
         findViewById(R.id.leaderboards).setEnabled(true);
         findViewById(R.id.achievements).setEnabled(true);
-        findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-        findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
-        signInInfo.setText(R.string.signed_in);
     }
 
     @Override
@@ -211,8 +196,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         }
         findViewById(R.id.leaderboards).setEnabled(false);
         findViewById(R.id.achievements).setEnabled(false);
-        findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-        findViewById(R.id.sign_out_button).setVisibility(View.GONE);
     }
 
     @Override
@@ -222,8 +205,6 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             case R.id.hardcore_play: startHardcorePlay(); break;
             case R.id.options: openOptions(); break;
             case R.id.leaderboards: showDialog(); break;
-            case R.id.sign_in_button: signIn(); break;
-            case R.id.sign_out_button: signOut(); break;
             case R.id.regular_leaderboard: showLeaderboard("Regular"); break;
             case R.id.hardcore_leaderboard: showLeaderboard("Hardcore"); break;
             case R.id.achievements: showAchievements(); break;

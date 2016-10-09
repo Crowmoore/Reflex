@@ -12,40 +12,6 @@
     tools:context="fi.crowmoore.reflextester.MainActivity"
     android:background="@android:color/black">
 
-    <TextView
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/info"
-        android:layout_alignParentBottom="true"
-        android:paddingStart="2dp"
-        android:paddingLeft="2dp"
-        android:paddingBottom="2dp"
-        android:layout_alignParentLeft="true"
-        android:text=""
-        android:ellipsize="marquee"
-        android:textColor="@android:color/white" />
-
-    <com.google.android.gms.common.SignInButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sign_in_button"
-        android:paddingEnd="2dp"
-        android:paddingRight="2dp"
-        android:paddingBottom="2dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" />
-
-    <Button
-        android:id="@+id/sign_out_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign Out"
-        android:paddingEnd="2dp"
-        android:paddingRight="2dp"
-        android:visibility="invisible"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" />
-
     <android.support.v7.widget.AppCompatImageButton
         android:layout_width="160dp"
         android:layout_height="60dp"

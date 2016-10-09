@@ -47,8 +47,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
-        android:text="@string/text_back"
-        android:onClick="onBackButtonClick"/>
+        android:text="@string/text_back" />
 
     <CheckBox
         android:text="CheckBox"
@@ -63,5 +62,35 @@
         android:layout_alignBottom="@+id/label_sound"
         android:layout_alignLeft="@+id/options_title"
         android:layout_alignStart="@+id/options_title" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/info"
+        android:paddingStart="2dp"
+        android:paddingLeft="2dp"
+        android:layout_alignParentLeft="true"
+        android:text=""
+        android:ellipsize="marquee"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/label_sound"
+        android:layout_marginTop="20dp"/>
+
+    <com.google.android.gms.common.SignInButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sign_in_button"
+        android:paddingBottom="2dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/info" />
+
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Out"
+        android:visibility="invisible"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/info"/>
 
 </RelativeLayout>
