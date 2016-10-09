@@ -244,6 +244,11 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             builder.setView(dialogView);
             return builder.create();
         }
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        }
     }
 
     public static class SignInDialogFragment extends DialogFragment {
@@ -255,6 +260,11 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             final View dialogView = inflater.inflate(R.layout.sign_in_dialog, null);
             builder.setView(dialogView);
             return builder.create();
+        }
+        @Override
+        public void onActivityCreated(Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         }
     }
 

@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,7 +83,6 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
     private AchievementManager achievementManager;
-    private boolean starting;
     private Countdown countdown;
     private boolean muted;
     private Dialog scoreDialog;
@@ -123,7 +123,16 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         if(madman && googleApiClient != null && googleApiClient.isConnected()) {
             achievementManager.unlockAchievement(getString(R.string.achievement_verified_madman));
         }
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         countdown.execute();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    public void onPause() {
+        super.onPause();
+        endGame();
+        scoreDialog.dismiss();
+        finish();
     }
 
     public void buildApiClient() {
@@ -206,6 +215,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         createScoreDialog();
         incrementTimesPlayed();
         tapCount.setText("Taps: " + taps);
+        gatherStatistics();
         float average = reactionTime.getAverageReactionTime();
         averageTime.setText(String.format(Locale.US, "Average reaction time: %.02f sec", average));
         scoreResult.setText("Score: " + score);
@@ -213,6 +223,24 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
             highscoreResult.setText("New highscore: " + currentHighscore);
         } else {
             highscoreResult.setText("Highscore: " + currentHighscore);
+        }
+    }
+
+    private void gatherStatistics() {
+        int lifetimeTaps = settings.getInt("TapCount", 0) + taps;
+        Log.d("stats", "Lifetime taps " + lifetimeTaps);
+        editor.putInt("TapCount", lifetimeTaps);
+        editor.apply();
+
+        float averageReactionTime = settings.getFloat("ReactionTime", 0);
+        if (averageReactionTime == 0) {
+            editor.putFloat("ReactionTime", reactionTime.getAverageReactionTime());
+            editor.apply();
+        } else {
+            float average = (averageReactionTime + reactionTime.getAverageReactionTime()) / 2;
+            editor.putFloat("ReactionTime", average);
+            editor.apply();
+            Log.d("stats", "Average " + average);
         }
     }
 
@@ -234,29 +262,10 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         achievementManager.incrementAchievement(getString(R.string.achievement_hardcore_grandmaster), 1);
     }
 
-//    private void loadPlayerRank() {
-//        if(googleApiClient != null && googleApiClient.isConnected()) {
-//            Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_hardcore_mode), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
-//                @Override
-//                public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
-//                    LeaderboardScore lbs = scoreResult.getScore();
-//                    String rank;
-//                    try {
-//                        rank = lbs.getDisplayRank();
-//                        leaderboardRank.setText("Leaderboard rank: " + rank);
-//                    } catch (Exception e) {
-//                        leaderboardRank.setText("Could not retrieve leaderboard rank");
-//                    }
-//                }
-//            });
-//        }
-//    }
-
     private class GameLoop extends AsyncTask<Void, Bundle, Void> {
         @Override
         protected Void doInBackground(Void... parameters) {
             while(running) {
-                if(starting) { showCountDown(); }
                 String command = getRandomCommand();
                 commandsList.add(command);
                 commandTimesList.add(System.currentTimeMillis());
@@ -309,24 +318,11 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    private void showCountDown() {
-        for (int i = 3; i > 0; i--) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Log.e("Error", "Interrupted!");
-            }
-        }
-        initializeListeners();
-        starting = false;
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {
         switch(keyCode) {
             case KeyEvent.KEYCODE_BACK: endGame(); break;
-            default: endGame(); break;
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -394,6 +390,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         loaded = false;
 
         scoreView = (TextView) findViewById(R.id.score);
+        scoreView.setText("0");
         red = (ImageButton) findViewById(R.id.button_red);
         blue = (ImageButton) findViewById(R.id.button_blue);
         green = (ImageButton) findViewById(R.id.button_green);
@@ -421,7 +418,6 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         taps = 0;
         selection = 0;
         previous = 0;
-        starting = true;
         running = true;
     }
 
@@ -502,6 +498,9 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         scoreDialog = new Dialog(HardcorePlay.this);
         scoreDialog.setContentView(R.layout.score_dialog);
         scoreDialog.setTitle("Game Over");
+
+        scoreDialog.setCancelable(false);
+        scoreDialog.setCanceledOnTouchOutside(false);
 
         scoreResult = (TextView) scoreDialog.findViewById(R.id.score_result);
         highscoreResult = (TextView) scoreDialog.findViewById(R.id.highscore_result);

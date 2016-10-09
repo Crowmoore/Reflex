@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -84,7 +85,6 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private int high1;
     private int high2;
     private boolean muted;
-    private boolean starting;
     private Dialog scoreDialog;
     private Countdown countdown;
     private SharedPreferences settings;
@@ -116,7 +116,16 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     public void startGame() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         countdown.execute();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    public void onPause() {
+        super.onPause();
+        endGame();
+        scoreDialog.dismiss();
+        finish();
     }
 
     public void buildApiClient() {
@@ -217,11 +226,6 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         int lifetimeTaps = settings.getInt("TapCount", 0) + taps;
         Log.d("stats", "Lifetime taps " + lifetimeTaps);
         editor.putInt("TapCount", lifetimeTaps);
-        editor.apply();
-
-        int lifetimeRegularGames = settings.getInt("RegularGames", 0) + 1;
-        Log.d("stats", "Regular games played " + lifetimeRegularGames);
-        editor.putInt("RegularGames", lifetimeRegularGames);
         editor.apply();
 
         float averageReactionTime = settings.getFloat("ReactionTime", 0);
@@ -338,9 +342,6 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     {
         switch(keyCode) {
             case KeyEvent.KEYCODE_BACK: endGame(); break;
-            case KeyEvent.KEYCODE_HOME: endGame(); break;
-            case KeyEvent.KEYCODE_MENU: endGame(); break;
-            case KeyEvent.KEYCODE_POWER: endGame(); break;
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -458,7 +459,6 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         taps = 0;
         selection = 0;
         previous = 0;
-        starting = true;
         running = true;
     }
 
@@ -540,6 +540,9 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         scoreDialog = new Dialog(RegularPlay.this);
         scoreDialog.setContentView(R.layout.score_dialog);
         scoreDialog.setTitle("Game Over");
+
+        scoreDialog.setCancelable(false);
+        scoreDialog.setCanceledOnTouchOutside(false);
 
         scoreResult = (TextView) scoreDialog.findViewById(R.id.score_result);
         highscoreResult = (TextView) scoreDialog.findViewById(R.id.highscore_result);
