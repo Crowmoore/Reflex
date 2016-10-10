@@ -123,9 +123,8 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         if(madman && googleApiClient != null && googleApiClient.isConnected()) {
             achievementManager.unlockAchievement(getString(R.string.achievement_verified_madman));
         }
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        touchEventsAllowed(false);
         countdown.execute();
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void onPause() {
@@ -313,6 +312,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         protected void onPostExecute(Void parameters) {
             countdownText.setVisibility(View.GONE);
             initializeListeners();
+            touchEventsAllowed(true);
             GameLoop gameLoop = new GameLoop();
             gameLoop.execute();
         }
@@ -358,8 +358,8 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private int getScore(long startTime, long endTime) {
-        commandTimesList.remove(FIRST);
         reactionTime.addAverageTimeToList(startTime, endTime);
+        commandTimesList.remove(FIRST);
         long baseScore = 10;
         long difference = endTime - startTime;
         long bonus = (1000 - difference) / 100;
@@ -507,6 +507,8 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         tapCount = (TextView) scoreDialog.findViewById(R.id.tap_count);
         averageTime = (TextView) scoreDialog.findViewById(R.id.reaction_time);
 
+        scoreDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+
         scoreDialog.show();
     }
 
@@ -535,19 +537,11 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         soundDialog.dismiss();
         initializeGame();
     }
-}
-/*
-class ColorListener extends View.OnClickListener {
 
-    String color;
-    public ColorListener(String color) {
-        this.color=color;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if(!checkIfCorrect("Yellow")) {
-            endGame();
+    protected void touchEventsAllowed(boolean value) {
+        switch(String.valueOf(value)) {
+            case "true": getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE); break;
+            case "false": getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE); break;
         }
     }
-}*/
+}

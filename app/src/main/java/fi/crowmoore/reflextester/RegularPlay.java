@@ -14,6 +14,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.logging.Handler;
 
 import static fi.crowmoore.reflextester.MainActivity.RC_SIGN_IN;
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
@@ -85,6 +87,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private int high1;
     private int high2;
     private boolean muted;
+    private boolean touchAllowed;
     private Dialog scoreDialog;
     private Countdown countdown;
     private SharedPreferences settings;
@@ -116,9 +119,8 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     public void startGame() {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        touchEventsAllowed(false);
         countdown.execute();
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void onPause() {
@@ -238,8 +240,6 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
             editor.apply();
             Log.d("stats", "Average " + average);
         }
-
-
     }
 
     private void incrementTimesPlayed() {
@@ -259,24 +259,6 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         achievementManager.incrementAchievement(getString(R.string.achievement_expert), 1);
         achievementManager.incrementAchievement(getString(R.string.achievement_grandmaster), 1);
     }
-
-//    private void loadPlayerRank() {
-//        if(googleApiClient != null && googleApiClient.isConnected()) {
-//            Games.Leaderboards.loadCurrentPlayerLeaderboardScore(googleApiClient, getString(R.string.leaderboard_regular_mode), LeaderboardVariant.TIME_SPAN_ALL_TIME, LeaderboardVariant.COLLECTION_PUBLIC).setResultCallback(new ResultCallback<Leaderboards.LoadPlayerScoreResult>() {
-//                @Override
-//                public void onResult(final Leaderboards.LoadPlayerScoreResult scoreResult) {
-//                    LeaderboardScore lbs = scoreResult.getScore();
-//                    String rank;
-//                    try {
-//                        rank = lbs.getDisplayRank();
-//                        leaderboardRank.setText("Leaderboard rank: " + rank);
-//                    } catch (Exception e) {
-//                        leaderboardRank.setText("Could not retrieve leaderboard rank");
-//                    }
-//                }
-//            });
-//        }
-//    }
 
     private class GameLoop extends AsyncTask<Void, Bundle, Void> {
         @Override
@@ -332,6 +314,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         protected void onPostExecute(Void parameters) {
             countdownText.setVisibility(View.GONE);
             initializeListeners();
+            touchEventsAllowed(true);
             GameLoop gameLoop = new GameLoop();
             gameLoop.execute();
         }
@@ -552,5 +535,12 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         scoreDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
 
         scoreDialog.show();
+    }
+
+    protected void touchEventsAllowed(boolean value) {
+        switch(String.valueOf(value)) {
+            case "true": getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE); break;
+            case "false": getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE); break;
+        }
     }
 }
