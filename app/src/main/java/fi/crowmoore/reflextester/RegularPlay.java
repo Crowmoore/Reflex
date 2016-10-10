@@ -212,7 +212,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         tapCount.setText("Taps: " + taps);
         gatherStatistics();
         float average = reactionTime.getAverageReactionTime();
-        averageTime.setText(String.format(Locale.US, "Average reaction time: %.02f sec", average));
+        averageTime.setText(String.format(Locale.US, "Average reaction: %.02f sec", average));
         scoreResult.setText("Score: " + score);
         if(newHighscore) {
             highscoreResult.setText("New highscore: " + currentHighscore);
@@ -548,6 +548,8 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         highscoreResult = (TextView) scoreDialog.findViewById(R.id.highscore_result);
         tapCount = (TextView) scoreDialog.findViewById(R.id.tap_count);
         averageTime = (TextView) scoreDialog.findViewById(R.id.reaction_time);
+
+        scoreDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
 
         scoreDialog.show();
     }
