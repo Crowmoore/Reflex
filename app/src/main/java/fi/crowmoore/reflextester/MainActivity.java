@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,18 +28,17 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
-public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
     private GoogleApiClient googleApiClient;
     public static final int RC_SIGN_IN = 9001;
     public static final int REQUEST_LEADERBOARD = 100;
     public static final int REQUEST_ACHIEVEMENTS = 101;
-    private LeaderboardDialogFragment dialog;
-    private SignInDialogFragment signInDialog;
+    private LeaderboardDialogFragment leaderboardDialog;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
     private AchievementManager achievementManager;
+    private SignInDialogFragment signInDialog;
     private boolean signInClicked = false;
     private boolean resolvingConnectionFailure = false;
     private boolean autoStartSignInFlow = true;
@@ -46,6 +46,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     private boolean explicitSignOut = false;
     private TextView signInInfo;
     private String mode;
+    private Reflex reflex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +55,23 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         setOnClickListeners();
+        reflex = (Reflex) getApplicationContext();
 
         settings = getApplicationContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         editor = settings.edit();
         explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
+        if(!explicitSignOut) {
+            reflex.setManager(this);
+            achievementManager = new AchievementManager(reflex.getManager().getApiClient());
+        }
 
-        if(!explicitSignOut && googleApiClient == null) {
-            buildApiClient();
-        } else {
-            findViewById(R.id.leaderboards).setEnabled(false);
-            findViewById(R.id.achievements).setEnabled(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!explicitSignOut && reflex.getManager() != null) {
+            reflex.getManager().setActivity(this);
         }
     }
 
@@ -75,73 +83,50 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
         findViewById(R.id.achievements).setOnClickListener(this);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
-        if(googleApiClient == null && !explicitSignOut) {
-            buildApiClient();
-        }
-        if(googleApiClient != null && !explicitSignOut) {
-            googleApiClient.connect();
-        }
-        if(explicitSignOut) {
-            findViewById(R.id.leaderboards).setEnabled(false);
-            findViewById(R.id.achievements).setEnabled(false);
-        }
-    }
-
-    public void buildApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addConnectionCallbacks(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
-        achievementManager = new AchievementManager(googleApiClient);
-    }
-
-    public void signIn() {
-        signInClicked = true;
-        editor.putBoolean("ExplicitSignOut", false);
-        editor.apply();
-        if(googleApiClient == null) {
-            buildApiClient();
-        }
-        googleApiClient.connect();
-    }
-
-    public void signOut() {
-        signInClicked = false;
-        editor.putBoolean("ExplicitSignOut", true);
-        editor.apply();
-        Games.signOut(googleApiClient);
-        if (googleApiClient.isConnected()) {
-            googleApiClient.disconnect();
-
-            findViewById(R.id.leaderboards).setEnabled(false);
-            findViewById(R.id.achievements).setEnabled(false);
-        }
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
+//        if(googleApiClient == null && !explicitSignOut) {
+//            buildApiClient();
+//            Log.d("GoogleAPI", "build");
+//        }
+//        if(googleApiClient != null && !explicitSignOut) {
+//            googleApiClient.connect();
+//            Log.d("GoogleAPI", "connect");
+//        }
+//        if(explicitSignOut) {
+//            Log.d("GoogleAPI", "nope");
+//            findViewById(R.id.leaderboards).setEnabled(false);
+//            findViewById(R.id.achievements).setEnabled(false);
+//        }
+//    }
 
     public void startRegularPlay() {
-        if(googleApiClient != null && googleApiClient.isConnected()) {
+        if(reflex.getManager() != null && reflex.getManager().isConnected()) {
             startActivity(new Intent(MainActivity.this, RegularPlay.class));
             overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
         } else {
             mode = "Regular";
             signInDialog = new SignInDialogFragment();
             signInDialog.show(getFragmentManager(), null);
+            getFragmentManager().executePendingTransactions();
+            signInDialog.getDialog().findViewById(R.id.dialog_sign_in_button).setOnClickListener(this);
+            signInDialog.getDialog().findViewById(R.id.dialog_not_now_button).setOnClickListener(this);
         }
     }
 
     public void startHardcorePlay() {
-        if(googleApiClient != null && googleApiClient.isConnected()) {
+        if(reflex.getManager() != null && reflex.getManager().isConnected()) {
             startActivity(new Intent(MainActivity.this, HardcorePlay.class));
             overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
         } else {
             mode = "Hardcore";
             signInDialog = new SignInDialogFragment();
             signInDialog.show(getFragmentManager(), null);
+            getFragmentManager().executePendingTransactions();
+            signInDialog.getDialog().findViewById(R.id.dialog_sign_in_button).setOnClickListener(this);
+            signInDialog.getDialog().findViewById(R.id.dialog_not_now_button).setOnClickListener(this);
         }
     }
 
@@ -152,55 +137,60 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
 
     private void showLeaderboard(String type) {
         switch(type) {
-            case "Regular": startActivityForResult(Games.Leaderboards.getLeaderboardIntent(googleApiClient,
+            case "Regular": startActivityForResult(Games.Leaderboards.getLeaderboardIntent(reflex.getManager().getApiClient(),
                             getString(R.string.leaderboard_regular_mode)), REQUEST_LEADERBOARD);
-                            dialog.dismiss();
+                            leaderboardDialog.dismiss();
                             break;
-            case "Hardcore": startActivityForResult(Games.Leaderboards.getLeaderboardIntent(googleApiClient,
+            case "Hardcore": startActivityForResult(Games.Leaderboards.getLeaderboardIntent(reflex.getManager().getApiClient(),
                              getString(R.string.leaderboard_hardcore_mode)), REQUEST_LEADERBOARD);
-                             dialog.dismiss();
+                             leaderboardDialog.dismiss();
                              break;
         }
     }
 
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Log.d("tag", "GoogleAPIClient Connected");
-        findViewById(R.id.leaderboards).setEnabled(true);
-        findViewById(R.id.achievements).setEnabled(true);
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-        Log.d("tag", "GoogleAPIClient connection suspended");
-        googleApiClient.connect();
-    }
+//    @Override
+//    public void onConnected(Bundle connectionHint) {
+//        Log.d("tag", "GoogleAPIClient Connected");
+//        findViewById(R.id.leaderboards).setEnabled(true);
+//        findViewById(R.id.achievements).setEnabled(true);
+//    }
+//
+//    @Override
+//    public void onConnectionSuspended(int cause) {
+//        Log.d("tag", "GoogleAPIClient connection suspended");
+//        googleApiClient.connect();
+//    }
 
     public void showDialog() {
-        dialog = new LeaderboardDialogFragment();
-        dialog.show(getFragmentManager(), null);
+        if(reflex.getManager() != null && reflex.getManager().isConnected()) {
+            leaderboardDialog = new LeaderboardDialogFragment();
+            leaderboardDialog.show(getFragmentManager(), null);
+            getFragmentManager().executePendingTransactions();
+            leaderboardDialog.getDialog().findViewById(R.id.regular_leaderboard).setOnClickListener(this);
+            leaderboardDialog.getDialog().findViewById(R.id.hardcore_leaderboard).setOnClickListener(this);
+        }
     }
 
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("tag", "GoogleAPIClient connection failed. Resolving");
-        if(resolvingConnectionFailure) {
-            return;
-        }
-        if(signInClicked || autoStartSignInFlow) {
-            autoStartSignInFlow = false;
-            signInClicked = false;
-            resolvingConnectionFailure = true;
-
-            if(!BaseGameUtils.resolveConnectionFailure(this,
-                    googleApiClient, connectionResult,
-                    RC_SIGN_IN, getString(R.string.sign_in_error))) {
-                resolvingConnectionFailure = false;
-            }
-        }
-        findViewById(R.id.leaderboards).setEnabled(false);
-        findViewById(R.id.achievements).setEnabled(false);
-    }
+//    @Override
+//    public void onConnectionFailed(ConnectionResult connectionResult) {
+//        Log.d("tag", "GoogleAPIClient connection failed. Resolving");
+//        if(resolvingConnectionFailure) {
+//            return;
+//        }
+//        if(signInClicked || autoStartSignInFlow) {
+//            autoStartSignInFlow = false;
+//            signInClicked = false;
+//            resolvingConnectionFailure = true;
+//
+//            if(!BaseGameUtils.resolveConnectionFailure(this,
+//                    googleApiClient, connectionResult,
+//                    RC_SIGN_IN, getString(R.string.sign_in_error))) {
+//                resolvingConnectionFailure = false;
+//            }
+//        }
+//        findViewById(R.id.leaderboards).setEnabled(false);
+//        findViewById(R.id.achievements).setEnabled(false);
+//    }
 
     @Override
     public void onClick(View view) {
@@ -212,68 +202,69 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             case R.id.regular_leaderboard: showLeaderboard("Regular"); break;
             case R.id.hardcore_leaderboard: showLeaderboard("Hardcore"); break;
             case R.id.achievements: showAchievements(); break;
+            case R.id.dialog_sign_in_button: onSignInClicked(); break;
+            case R.id.dialog_not_now_button: onNotNowClicked(); break;
         }
     }
 
     public void showAchievements() {
-        startActivityForResult(achievementManager.getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
-    }
-
-    public static class LeaderboardDialogFragment extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-
-            final View dialogView = inflater.inflate(R.layout.leaderboard_dialog, null);
-            builder.setView(dialogView);
-            return builder.create();
-        }
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        if(reflex.getManager() != null && reflex.getManager().isConnected()) {
+            startActivityForResult(achievementManager.getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
         }
     }
 
-    public static class SignInDialogFragment extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
+//    public static class LeaderboardDialogFragment extends DialogFragment {
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//            LayoutInflater inflater = getActivity().getLayoutInflater();
+//
+//            final View dialogView = inflater.inflate(R.layout.leaderboard_dialog, null);
+//            builder.setView(dialogView);
+//            return builder.create();
+//        }
+//        @Override
+//        public void onActivityCreated(Bundle savedInstanceState) {
+//            super.onActivityCreated(savedInstanceState);
+//            getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+//        }
+//    }
 
-            final View dialogView = inflater.inflate(R.layout.sign_in_dialog, null);
-            builder.setView(dialogView);
-            return builder.create();
-        }
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        }
-    }
+//    public static class SignInDialogFragment extends DialogFragment {
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//            LayoutInflater inflater = getActivity().getLayoutInflater();
+//
+//            final View dialogView = inflater.inflate(R.layout.sign_in_dialog, null);
+//            builder.setView(dialogView);
+//            return builder.create();
+//        }
+//        @Override
+//        public void onActivityCreated(Bundle savedInstanceState) {
+//            super.onActivityCreated(savedInstanceState);
+//            getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+//        }
+//    }
 
-    public void onNotNowClicked(View view) {
+    public void onNotNowClicked() {
         editor.putBoolean("ExplicitSignOut", true);
         editor.apply();
         startGame();
     }
 
-    public void onSignInClicked(View view) {
+    public void onSignInClicked() {
         editor.putBoolean("ExplicitSignOut", false);
         editor.apply();
-        if(googleApiClient == null) {
-            buildApiClient();
-        } else {
-            googleApiClient.connect();
-        }
+        reflex.setManager(this);
         startGame();
+
     }
 
     private void startGame() {
         signInDialog.dismiss();
         switch(mode) {
-            case "Regular": startActivity(new Intent(MainActivity.this, RegularPlay.class));
+            case "Regular": startActivity(new Intent(getApplicationContext(), RegularPlay.class));
                             overridePendingTransition(R.anim.open_activity, R.anim.close_activity); break;
             case "Hardcore": startActivity(new Intent(MainActivity.this, HardcorePlay.class));
                              overridePendingTransition(R.anim.open_activity, R.anim.close_activity); break;

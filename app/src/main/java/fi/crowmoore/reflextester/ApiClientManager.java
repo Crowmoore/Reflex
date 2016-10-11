@@ -28,29 +28,33 @@ public class ApiClientManager implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient client;
-    private Context context;
+    private Activity context;
     private Activity activity;
 
-    public ApiClientManager(Context context) {
+    private boolean signInClicked = false;
+    private boolean resolvingConnectionFailure = false;
+    private boolean autoStartSignInFlow = true;
+
+    public ApiClientManager(Activity context) {
         this.context = context;
         buildApiClient();
         connect();
-        Log.d("pylly", "Client created");
+        Log.d("APIClient", "Client created");
     }
 
-    public void setActivity(Activity activity) {
-        this.activity = activity;
+    public void setActivity(Activity context) {
+        this.context = context;
     }
 
     public GoogleApiClient getApiClient() {
-        Log.d("pylly", "returning client");
+        Log.d("APIClient", "returning client");
         return this.client;
     }
 
     public void connect() {
         if(client != null) {
             client.connect();
-            Log.d("pylly", String.valueOf(client.isConnected()));
+            Log.d("APIClient", String.valueOf(client.isConnected()));
         } else {
             buildApiClient();
             client.connect();
@@ -74,39 +78,39 @@ public class ApiClientManager implements GoogleApiClient.ConnectionCallbacks,
                 .addOnConnectionFailedListener(this)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
-        Log.d("pylly", client.toString());
+        Log.d("APIClient", client.toString());
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d("pylly", "ApiClient connected");
+        Log.d("APIClient", "ApiClient connected");
         Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onConnectionSuspended(int cause) {
-        Log.d("pylly", "ApiClient connection suspended by cause " + cause);
+        Log.d("APIClient", "ApiClient connection suspended by cause " + cause);
         client.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        Log.d("pylly", "ApiClient connection failed: " + result.toString());
+        Log.d("APIClient", "ApiClient connection failed: " + result.toString());
 //        Intent signInIntent = Games.getSignInIntent(client);
 //        startActivityForResult(signInIntent, RC_SIGN_IN);
-//        if(resolvingConnectionFailure) {
-//            return;
-//        }
-//        if(signInClicked || autoStartSignInFlow) {
-//            autoStartSignInFlow = false;
-//            signInClicked = false;
-//            resolvingConnectionFailure = true;
-//
-//            if(!BaseGameUtils.resolveConnectionFailure(this,
-//                    client, result,
-//                    RC_SIGN_IN, String.valueOf(R.string.sign_in_error))) {
-//                resolvingConnectionFailure = false;
-//            }
-//        }
+        if(resolvingConnectionFailure) {
+            return;
+        }
+        if(signInClicked || autoStartSignInFlow) {
+            autoStartSignInFlow = false;
+            signInClicked = false;
+            resolvingConnectionFailure = true;
+
+            if(!BaseGameUtils.resolveConnectionFailure(context,
+                    client, result,
+                    RC_SIGN_IN, String.valueOf(R.string.sign_in_error))) {
+                resolvingConnectionFailure = false;
+            }
+        }
     }
 }

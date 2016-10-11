@@ -16,10 +16,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
+import java.sql.Ref;
+
 import static fi.crowmoore.reflextester.MainActivity.RC_SIGN_IN;
 
-public class OptionsActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class OptionsActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String PREFERENCES = "PreferencesFile";
     private TextView signInInfo;
@@ -32,10 +33,14 @@ public class OptionsActivity extends AppCompatActivity implements GoogleApiClien
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
 
+    private Reflex reflex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_options);
+
+        reflex = (Reflex) getApplicationContext();
 
         signInInfo = (TextView) findViewById(R.id.info);
         settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
@@ -55,64 +60,27 @@ public class OptionsActivity extends AppCompatActivity implements GoogleApiClien
         muteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton button, boolean isChecked) {
-                if(button.isChecked()) {
-                    editor.putBoolean("Muted", true);
-                    editor.apply();
-                } else {
-                    editor.putBoolean("Muted", false);
-                    editor.apply();
-                }
+                editor.putBoolean("Muted", button.isChecked());
+                editor.apply();
             }
         });
 
-        if(!explicitSignOut && googleApiClient == null) {
-            buildApiClient();
-        } else {
+        explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
+
+        if(!explicitSignOut && reflex.getManager() == null) {
+            reflex.setManager(this);
+        }
+
+        if(explicitSignOut){
+            Log.d("Regular", "manager signed out");
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_button).setVisibility(View.GONE);
             signInInfo.setText(R.string.not_signed_in);
-        }
-    }
-
-    public void buildApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addConnectionCallbacks(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
-    }
-
-
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Log.d("tag", "GoogleAPIClient Connected");
-        findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-        findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
-        signInInfo.setText(R.string.signed_in);
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-        Log.d("tag", "GoogleAPIClient connection suspended");
-        googleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("tag", "GoogleAPIClient connection failed. Resolving");
-        if(resolvingConnectionFailure) {
-            return;
-        }
-        if(signInClicked || autoStartSignInFlow) {
-            autoStartSignInFlow = false;
-            signInClicked = false;
-            resolvingConnectionFailure = true;
-
-            if(!BaseGameUtils.resolveConnectionFailure(this,
-                    googleApiClient, connectionResult,
-                    RC_SIGN_IN, getString(R.string.sign_in_error))) {
-                resolvingConnectionFailure = false;
-            }
+        } else {
+            reflex.getManager().setActivity(this);
+            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
+            signInInfo.setText(R.string.signed_in);
         }
     }
 
@@ -120,27 +88,33 @@ public class OptionsActivity extends AppCompatActivity implements GoogleApiClien
         signInClicked = true;
         editor.putBoolean("ExplicitSignOut", false);
         editor.apply();
-        if(googleApiClient == null) {
-            buildApiClient();
-        }
-        googleApiClient.connect();
+        reflex.setManager(this);
         findViewById(R.id.sign_in_button).setVisibility(View.GONE);
         findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
         signInInfo.setText(R.string.signed_in);
+
     }
 
     public void signOut() {
         signInClicked = false;
         editor.putBoolean("ExplicitSignOut", true);
         editor.apply();
-        if (googleApiClient.isConnected()) {
-            Games.signOut(googleApiClient);
-            googleApiClient.disconnect();
+        if (reflex.getManager().isConnected()) {
+            Games.signOut(reflex.getManager().getApiClient());
+            reflex.getManager().disconnect();
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_button).setVisibility(View.GONE);
             signInInfo.setText(R.string.not_signed_in);
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!explicitSignOut && reflex.getManager() != null) {
+            reflex.getManager().setActivity(this);
+        }
     }
 
     public void onBackButtonClick() {

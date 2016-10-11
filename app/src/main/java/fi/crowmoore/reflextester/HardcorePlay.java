@@ -44,8 +44,7 @@ import java.util.Random;
 import static fi.crowmoore.reflextester.MainActivity.RC_SIGN_IN;
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
-public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class HardcorePlay extends AppCompatActivity {
 
     private GoogleApiClient googleApiClient;
     private boolean resolvingConnectionFailure = false;
@@ -93,10 +92,14 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     private final int DECREMENT_AMOUNT = 2;
     private final int MINIMUM_INTERVAL = 500;
 
+    private Reflex reflex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hardcore_play);
+
+        reflex = (Reflex) getApplicationContext();
 
         settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         muted = settings.getBoolean("Muted", false);
@@ -113,16 +116,25 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
     public void initializeGame() {
         initializeComponents();
 
-        if(!explicitSignOut && googleApiClient == null) {
-            buildApiClient();
+        if(!explicitSignOut && reflex.getManager() == null) {
+            Log.d("Regular", "manager is null");
+            reflex.setManager(this);
+            achievementManager = new AchievementManager(reflex.getManager().getApiClient());
+            startGame();
+        } else if(!explicitSignOut && reflex.getManager().isConnected()) {
+            Log.d("Regular", "manager is connected");
+            reflex.getManager().setActivity(this);
+            achievementManager = new AchievementManager(reflex.getManager().getApiClient());
+            startGame();
         } else {
+            Log.d("Regular", "manager signed out");
             startGame();
         }
     }
 
     public void startGame() {
         touchEventsAllowed(false);
-        if(madman && googleApiClient != null && googleApiClient.isConnected()) {
+        if(madman && reflex.getManager() != null && reflex.getManager().isConnected() && achievementManager != null) {
             achievementManager.unlockAchievement(getString(R.string.achievement_verified_madman));
         }
         countdown.execute();
@@ -135,44 +147,6 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         finish();
     }
 
-    public void buildApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addConnectionCallbacks(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
-        achievementManager = new AchievementManager(googleApiClient);
-    }
-
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Log.d("tag", "GoogleAPIClient Connected");
-        startGame();
-    }
-    @Override
-    public void onConnectionSuspended(int cause) {
-        Log.d("tag", "GoogleAPIClient connection suspended");
-        googleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        if(resolvingConnectionFailure) {
-            return;
-        }
-        if(signInClicked || autoStartSignInFlow) {
-            autoStartSignInFlow = false;
-            signInClicked = false;
-            resolvingConnectionFailure = true;
-
-            if(!BaseGameUtils.resolveConnectionFailure(this,
-                    googleApiClient, connectionResult,
-                    RC_SIGN_IN, getString(R.string.sign_in_error))) {
-                resolvingConnectionFailure = false;
-            }
-        }
-    }
-
     private boolean checkIfCorrect(String command) {
         if(commandsList.isEmpty() || commandTimesList.isEmpty()) {
             return false;
@@ -183,7 +157,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
             commandsList.remove(0);
             taps += 1;
             scoreView.setText(String.valueOf(score));
-            if(googleApiClient != null && googleApiClient.isConnected()) {
+            if(reflex.getManager() != null && reflex.getManager().isConnected() && achievementManager != null) {
                 checkScoreForAchievement(score);
             }
             return true;
@@ -208,8 +182,8 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Hardcore");
         boolean newHighscore = highscore.isHighscore();
-        if(googleApiClient != null && googleApiClient.isConnected()) {
-            Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_hardcore_mode), score);
+        if(reflex.getManager() != null && reflex.getManager().isConnected()) {
+            Games.Leaderboards.submitScore(reflex.getManager().getApiClient(), getString(R.string.leaderboard_hardcore_mode), score);
         }
         int currentHighscore = highscore.getHighscore();
         incrementTimesPlayed();
@@ -224,15 +198,15 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         editor.putInt("TapCount", lifetimeTaps);
         editor.apply();
 
-        float averageReactionTime = settings.getFloat("ReactionTime", 0);
+        float averageReactionTime = settings.getFloat("ReactionTimeHardcore", 0);
         if (averageReactionTime == 0) {
-            editor.putFloat("ReactionTime", reactionTime.getAverageReactionTime());
+            editor.putFloat("ReactionTimeHardcore", reactionTime.getAverageReactionTime());
             editor.apply();
         } else {
             float average = (averageReactionTime + reactionTime.getAverageReactionTime()) / 2;
-            editor.putFloat("ReactionTime", average);
+            editor.putFloat("ReactionTimeHardcore", average);
             editor.apply();
-            Log.d("stats", "Average " + average);
+            Log.d("stats", "Hardcore Average" + average);
         }
     }
 
@@ -241,7 +215,7 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         timesPlayed = timesPlayed + 1;
         editor.putInt("TimesPlayedHardcore", timesPlayed);
         editor.apply();
-        if(googleApiClient != null && googleApiClient.isConnected()) {
+        if(reflex.getManager() != null && reflex.getManager().isConnected() && achievementManager != null) {
             incrementAchievements();
         }
     }
@@ -252,6 +226,14 @@ public class HardcorePlay extends AppCompatActivity implements GoogleApiClient.C
         achievementManager.incrementAchievement(getString(R.string.achievement_hardcore_senior), 1);
         achievementManager.incrementAchievement(getString(R.string.achievement_hardcore_expert), 1);
         achievementManager.incrementAchievement(getString(R.string.achievement_hardcore_grandmaster), 1);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!explicitSignOut) {
+            reflex.getManager().setActivity(this);
+        }
     }
 
     private class GameLoop extends AsyncTask<Void, Bundle, Void> {

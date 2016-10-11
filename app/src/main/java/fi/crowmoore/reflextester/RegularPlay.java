@@ -53,8 +53,7 @@ import java.util.logging.Handler;
 import static fi.crowmoore.reflextester.MainActivity.RC_SIGN_IN;
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
-public class RegularPlay extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class RegularPlay extends AppCompatActivity {
 
     private GoogleApiClient googleApiClient;
     private boolean resolvingConnectionFailure = false;
@@ -101,10 +100,14 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private final int DECREMENT_AMOUNT = 5;
     private final int MINIMUM_INTERVAL = 300;
 
+    private Reflex reflex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_regular_play);
+
+        reflex = (Reflex) getApplicationContext();
 
         initializeGame();
     }
@@ -112,9 +115,18 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     public void initializeGame() {
         initializeComponents();
 
-        if(!explicitSignOut && googleApiClient == null) {
-            buildApiClient();
+        if(!explicitSignOut && reflex.getManager() == null) {
+            Log.d("Regular", "manager is null");
+            reflex.setManager(this);
+            achievementManager = new AchievementManager(reflex.getManager().getApiClient());
+            startGame();
+        } else if(!explicitSignOut && reflex.getManager().isConnected()) {
+            Log.d("Regular", "manager is connected");
+            reflex.getManager().setActivity(this);
+            achievementManager = new AchievementManager(reflex.getManager().getApiClient());
+            startGame();
         } else {
+            Log.d("Regular", "manager signed out");
             startGame();
         }
     }
@@ -131,44 +143,6 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         finish();
     }
 
-    public void buildApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addConnectionCallbacks(this)
-                .addApi(Games.API).addScope(Games.SCOPE_GAMES)
-                .build();
-        achievementManager = new AchievementManager(googleApiClient);
-    }
-
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Log.d("tag", "GoogleAPIClient Connected");
-        startGame();
-    }
-    @Override
-    public void onConnectionSuspended(int cause) {
-        Log.d("tag", "GoogleAPIClient connection suspended");
-        googleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        if(resolvingConnectionFailure) {
-            return;
-        }
-        if(signInClicked || autoStartSignInFlow) {
-            autoStartSignInFlow = false;
-            signInClicked = false;
-            resolvingConnectionFailure = true;
-
-            if(!BaseGameUtils.resolveConnectionFailure(this,
-                    googleApiClient, connectionResult,
-                    RC_SIGN_IN, getString(R.string.sign_in_error))) {
-                resolvingConnectionFailure = false;
-            }
-        }
-    }
-
     private boolean checkIfCorrect(String command) {
         if(commandsList.isEmpty() || commandTimesList.isEmpty()) {
             return false;
@@ -178,7 +152,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
             commandsList.remove(FIRST);
             taps += 1;
             scoreView.setText(String.valueOf(score));
-            if(googleApiClient != null && googleApiClient.isConnected()) {
+            if(reflex.getManager() != null && reflex.getManager().isConnected() && achievementManager != null) {
                 checkScoreForAchievement(score);
             }
             return true;
@@ -206,8 +180,8 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         soundPool.release();
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Regular");
         boolean newHighscore = highscore.isHighscore();
-        if(googleApiClient != null && googleApiClient.isConnected()) {
-            Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_regular_mode), score);
+        if(reflex.getManager() != null && reflex.getManager().isConnected()) {
+            Games.Leaderboards.submitScore(reflex.getManager().getApiClient(), getString(R.string.leaderboard_regular_mode), score);
         }
         int currentHighscore = highscore.getHighscore();
         incrementTimesPlayed();
@@ -239,7 +213,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         timesPlayed = timesPlayed + 1;
         editor.putInt("TimesPlayedRegular", timesPlayed);
         editor.apply();
-        if(googleApiClient != null && googleApiClient.isConnected()) {
+        if(reflex.getManager() != null && reflex.getManager().isConnected() && achievementManager != null) {
             incrementAchievements();
         }
     }
@@ -250,6 +224,14 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         achievementManager.incrementAchievement(getString(R.string.achievement_senior), 1);
         achievementManager.incrementAchievement(getString(R.string.achievement_expert), 1);
         achievementManager.incrementAchievement(getString(R.string.achievement_grandmaster), 1);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!explicitSignOut) {
+            reflex.getManager().setActivity(this);
+        }
     }
 
     private class GameLoop extends AsyncTask<Void, Bundle, Void> {
