@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="250dp"
-    android:layout_height="400dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
@@ -12,7 +12,7 @@
         android:fontFamily="casual"
         android:layout_centerHorizontal="true"
         android:textStyle="bold"
-        android:textSize="30sp"/>
+        android:textSize="40sp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
         android:id="@+id/score_result"
         android:text=""
         android:layout_marginLeft="5dp"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:fontFamily="casual"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="90dp" />
@@ -32,7 +32,7 @@
         android:text=""
         android:fontFamily="casual"
         android:layout_marginLeft="5dp"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/score_result"
         android:layout_marginTop="20dp" />
@@ -44,7 +44,7 @@
         android:text=""
         android:fontFamily="casual"
         android:layout_marginLeft="5dp"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/highscore_result"
         android:layout_marginTop="20dp" />
@@ -56,26 +56,34 @@
         android:text=""
         android:fontFamily="casual"
         android:layout_marginLeft="5dp"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/tap_count"
         android:layout_marginTop="20dp"/>
 
+    <View
+        android:id="@+id/centerShim"
+        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"/>
+
     <Button
         android:text="Back to menu"
-        android:layout_width="125dp"
+        android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignTop="@+id/reset_button"
-        android:layout_toRightOf="@+id/reset_button"
+        android:layout_alignParentBottom="true"
         android:onClick="onBackButtonClick"
         android:background="@android:color/holo_red_light"
         android:fontFamily="casual"
         android:textStyle="bold"
-        android:id="@+id/back_button" />
+        android:id="@+id/back_button"
+        android:layout_toRightOf="@id/centerShim"
+        android:layout_toEndOf="@id/centerShim"/>
 
     <Button
         android:text="Try again"
-        android:layout_width="125dp"
+        android:layout_width="match_parent"
         android:layout_height="60dp"
         android:onClick="onResetButtonClicked"
         android:id="@+id/reset_button"
@@ -83,7 +91,7 @@
         android:textStyle="bold"
         android:background="@android:color/holo_green_light"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toLeftOf="@id/centerShim"
+        android:layout_toStartOf="@id/centerShim"/>
 
 </RelativeLayout>

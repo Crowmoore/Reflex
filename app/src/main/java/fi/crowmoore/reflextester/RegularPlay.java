@@ -93,6 +93,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
     private AchievementManager achievementManager;
+    private GameOverDialogFragment gameOverDialog;
     private ReactionTime reactionTime;
     private AdView adView;
     private int taps;
@@ -126,7 +127,7 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     public void onPause() {
         super.onPause();
         endGame();
-        scoreDialog.dismiss();
+        gameOverDialog.dismiss();
         finish();
     }
 
@@ -209,19 +210,10 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
             Games.Leaderboards.submitScore(googleApiClient, getString(R.string.leaderboard_regular_mode), score);
         }
         int currentHighscore = highscore.getHighscore();
-        createScoreDialog();
         incrementTimesPlayed();
-        tapCount.setText("Taps: " + taps);
         gatherStatistics();
         float average = reactionTime.getAverageReactionTime();
-        averageTime.setText(String.format(Locale.US, "Average reaction: %.02f sec", average));
-        scoreResult.setText("Score: " + score);
-        if(newHighscore) {
-            highscoreResult.setText("New highscore: " + currentHighscore);
-        } else {
-            highscoreResult.setText("Highscore: " + currentHighscore);
-        }
-
+        createGameOverDialog(score, currentHighscore, taps, average);
     }
 
     private void gatherStatistics() {
@@ -446,12 +438,12 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     public void onBackButtonClick(View view) {
-        scoreDialog.dismiss();
+        gameOverDialog.dismiss();
         this.finish();
         overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
     }
     public void onResetButtonClicked(View view) {
-        scoreDialog.dismiss();
+        gameOverDialog.dismiss();
         initializeGame();
 
     }
@@ -519,22 +511,14 @@ public class RegularPlay extends AppCompatActivity implements GoogleApiClient.Co
         soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
     }
 
-    protected void createScoreDialog() {
-        scoreDialog = new Dialog(RegularPlay.this);
-        scoreDialog.setContentView(R.layout.score_dialog);
-        scoreDialog.setTitle("Game Over");
-
-        scoreDialog.setCancelable(false);
-        scoreDialog.setCanceledOnTouchOutside(false);
-
-        scoreResult = (TextView) scoreDialog.findViewById(R.id.score_result);
-        highscoreResult = (TextView) scoreDialog.findViewById(R.id.highscore_result);
-        tapCount = (TextView) scoreDialog.findViewById(R.id.tap_count);
-        averageTime = (TextView) scoreDialog.findViewById(R.id.reaction_time);
-
-        scoreDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-
-        scoreDialog.show();
+    protected void createGameOverDialog(int score, int highscore, int taps, float reaction) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("score", score);
+        bundle.putInt("highscore", highscore);
+        bundle.putInt("taps", taps);
+        bundle.putFloat("reaction", reaction);
+        gameOverDialog = GameOverDialogFragment.getNewDialogInstance(bundle);
+        gameOverDialog.show(getFragmentManager(), null);
     }
 
     protected void touchEventsAllowed(boolean value) {
