@@ -4,7 +4,7 @@
     <string name="text_hardcore">Hardcore</string>
     <string name="text_options">Options</string>
     <string name="text_leaderboards">Leaderboards</string>
-    <string name="text_sound_volume">Mute sound</string>
+    <string name="sound_label">Mute sound</string>
     <string name="text_back">Back</string>
     <string name="sign_in_error">Error during sign in</string>
     <string name="app_id_for_ads">ca-app-pub-6999054457732372~2280502043</string>

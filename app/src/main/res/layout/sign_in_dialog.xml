@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="250dp"
-    android:layout_height="250dp"
-    android:orientation="vertical">
+    android:layout_height="350dp"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/score_dialog"
-        android:text="Sign in?"
-        android:fontFamily="casual"
-        android:layout_centerHorizontal="true"
-        android:textSize="30sp"/>
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/ic_signin_bg"
+        android:id="@+id/background"
+        android:background="@android:color/transparent"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,35 +19,39 @@
         android:id="@+id/sign_in_info"
         android:text="In order to receive achievements and compete on the leaderboards you need to be signed in to Google Play Games Service. Would you like to sign in now?"
         android:fontFamily="casual"
-        android:textSize="16sp"
-        android:padding="2dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp" />
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginTop="80dp" />
 
-    <Button
-        android:text="Not now"
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="125dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_below="@+id/sign_in_info"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_height="60dp"
+        app:srcCompat="@drawable/ic_button_signin"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
         android:onClick="onNotNowClicked"
-        android:fontFamily="casual"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
         android:id="@+id/dialog_not_now_button" />
 
-    <Button
-        android:text="Sign in"
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="125dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_below="@+id/sign_in_info"
+        android:layout_height="60dp"
+        app:srcCompat="@drawable/ic_button_notnow"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@android:color/transparent"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
         android:onClick="onSignInClicked"
-        android:id="@+id/dialog_sign_in_button"
-        android:fontFamily="casual"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/dialog_sign_in_button" />
 
 </RelativeLayout>

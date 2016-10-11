@@ -2,6 +2,8 @@ package fi.crowmoore.reflextester;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -46,23 +48,13 @@ public class GameOverDialogFragment extends DialogFragment {
             dialog.getWindow().setLayout(1000, 1400);
         }
     }
-//    @Override
-//    public void onCreateDialog(Bundle savedInstanceState) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        LayoutInflater inflater = getActivity().getLayoutInflater();
-//        final View dialogView = inflater.inflate(R.layout.score_dialog, null);
-//
-//        Bundle bundle = getArguments();
-//        setGameResults(dialogView, bundle);
-//        builder.setView(dialogView);
-//
-//        return builder.create();
-//    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getDialog().setCancelable(false);
         getDialog().setCanceledOnTouchOutside(false);
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
     }
 

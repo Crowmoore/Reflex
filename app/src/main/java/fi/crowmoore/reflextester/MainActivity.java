@@ -6,7 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.TextView;
 
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.games.Games;
 
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
@@ -20,10 +25,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
     private AchievementManager achievementManager;
+    private OptionsDialogFragment optionsDialog;
+    private StatsDialogFragment statsDialog;
     private SignInDialogFragment signInDialog;
     private boolean explicitSignOut = false;
     private String mode;
     private Reflex reflex;
+    private TextView signInInfo;
+    private SignInButton signInButton;
+    private Button signOutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +65,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void setOnClickListeners() {
         findViewById(R.id.regular_play).setOnClickListener(this);
         findViewById(R.id.hardcore_play).setOnClickListener(this);
+        findViewById(R.id.stats).setOnClickListener(this);
         findViewById(R.id.options).setOnClickListener(this);
         findViewById(R.id.leaderboards).setOnClickListener(this);
         findViewById(R.id.achievements).setOnClickListener(this);
@@ -89,8 +100,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void openOptions() {
-        startActivity(new Intent(MainActivity.this, OptionsActivity.class));
-        overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
+        optionsDialog = new OptionsDialogFragment();
+        optionsDialog.show(getFragmentManager(), null);
+        getFragmentManager().executePendingTransactions();
+
+        signInButton = (SignInButton) optionsDialog.getDialog().findViewById(R.id.sign_in_button);
+        signInButton.setOnClickListener(this);
+        signOutButton = (Button) optionsDialog.getDialog().findViewById(R.id.sign_out_button);
+        signOutButton.setOnClickListener(this);
+        signInInfo = (TextView) optionsDialog.getDialog().findViewById(R.id.info);
     }
 
     private void showLeaderboard(String type) {
@@ -121,14 +139,46 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         switch(view.getId()) {
             case R.id.regular_play: startRegularPlay(); break;
             case R.id.hardcore_play: startHardcorePlay(); break;
+            case R.id.stats: openStatsDialog(); break;
             case R.id.options: openOptions(); break;
+            case R.id.sign_in_button: onOptionsSignInClicked(); break;
+            case R.id.sign_out_button: onOptionsSignOutClicked(); break;
             case R.id.leaderboards: showDialog(); break;
             case R.id.regular_leaderboard: showLeaderboard("Regular"); break;
             case R.id.hardcore_leaderboard: showLeaderboard("Hardcore"); break;
             case R.id.achievements: showAchievements(); break;
             case R.id.dialog_sign_in_button: onSignInClicked(); break;
             case R.id.dialog_not_now_button: onNotNowClicked(); break;
+            case R.id.close_button: statsDialog.dismiss(); break;
         }
+    }
+
+    public void onOptionsSignInClicked() {
+        editor.putBoolean("ExplicitSignOut", false);
+        editor.apply();
+        reflex.setManager(this);
+        signInButton.setVisibility(View.GONE);
+        signOutButton.setVisibility(View.VISIBLE);
+        signInInfo.setText(R.string.signed_in);
+    }
+
+    public void onOptionsSignOutClicked() {
+        editor.putBoolean("ExplicitSignOut", true);
+        editor.apply();
+        if (reflex.getManager().isConnected()) {
+            Games.signOut(reflex.getManager().getApiClient());
+            reflex.getManager().disconnect();
+            signInButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility(View.GONE);
+            signInInfo.setText(R.string.not_signed_in);
+        }
+    }
+
+    public void openStatsDialog() {
+        statsDialog = new StatsDialogFragment();
+        statsDialog.show(getFragmentManager(), null);
+        getFragmentManager().executePendingTransactions();
+        statsDialog.getDialog().findViewById(R.id.close_button).setOnClickListener(this);
     }
 
     public void showAchievements() {

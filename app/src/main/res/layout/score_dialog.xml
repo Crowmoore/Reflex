@@ -2,64 +2,83 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/score_dialog"
-        android:text="Game Over"
-        android:fontFamily="casual"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold"
-        android:textSize="40sp"/>
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/ic_gameover_bg"
+        android:id="@+id/background"
+        android:background="@android:color/transparent"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/score_result"
         android:text=""
-        android:layout_marginLeft="5dp"
+        android:textColor="@android:color/white"
+        android:layout_marginLeft="30dp"
+        android:textStyle="bold"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
         android:textSize="22sp"
         android:fontFamily="casual"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="90dp" />
+        android:layout_marginTop="120dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/highscore_result"
         android:text=""
+        android:textColor="@android:color/white"
         android:fontFamily="casual"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="30dp"
+        android:textStyle="bold"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
         android:textSize="22sp"
-        android:layout_alignParentLeft="true"
         android:layout_below="@id/score_result"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="160dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tap_count"
         android:text=""
+        android:textColor="@android:color/white"
         android:fontFamily="casual"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="30dp"
+        android:textStyle="bold"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
         android:textSize="22sp"
-        android:layout_alignParentLeft="true"
         android:layout_below="@id/highscore_result"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="200dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/reaction_time"
         android:text=""
+        android:textColor="@android:color/white"
         android:fontFamily="casual"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="30dp"
+        android:textStyle="bold"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
         android:textSize="22sp"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/tap_count"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="240dp"/>
 
     <View
         android:id="@+id/centerShim"
@@ -68,30 +87,26 @@
         android:visibility="invisible"
         android:layout_centerHorizontal="true"/>
 
-    <Button
-        android:text="Back to menu"
-        android:layout_width="match_parent"
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="115dp"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        android:onClick="onBackButtonClick"
-        android:background="@android:color/holo_red_light"
-        android:fontFamily="casual"
-        android:textStyle="bold"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_button_back"
         android:id="@+id/back_button"
-        android:layout_toRightOf="@id/centerShim"
-        android:layout_toEndOf="@id/centerShim"/>
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="30dp"/>
 
-    <Button
-        android:text="Try again"
-        android:layout_width="match_parent"
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="115dp"
         android:layout_height="60dp"
-        android:onClick="onResetButtonClicked"
         android:id="@+id/reset_button"
-        android:fontFamily="casual"
-        android:textStyle="bold"
-        android:background="@android:color/holo_green_light"
+        app:srcCompat="@drawable/ic_button_tryagain"
+        android:background="@android:color/transparent"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@id/centerShim"
-        android:layout_toStartOf="@id/centerShim"/>
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp"/>
 
 </RelativeLayout>

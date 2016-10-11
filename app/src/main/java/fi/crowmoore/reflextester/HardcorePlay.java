@@ -33,7 +33,7 @@ import java.util.Random;
 
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
-public class HardcorePlay extends AppCompatActivity {
+public class HardcorePlay extends AppCompatActivity implements View.OnClickListener {
 
     private boolean explicitSignOut = false;
 
@@ -375,12 +375,20 @@ public class HardcorePlay extends AppCompatActivity {
         running = true;
     }
 
-    public void onBackButtonClick(View view) {
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.back_button: onBackButtonClick(); break;
+            case R.id.reset_button: onResetButtonClicked(); break;
+        }
+    }
+
+    public void onBackButtonClick() {
         gameOverDialog.dismiss();
         this.finish();
         overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
     }
-    public void onResetButtonClicked(View view) {
+    public void onResetButtonClicked() {
         gameOverDialog.dismiss();
         initializeGame();
     }
@@ -456,6 +464,9 @@ public class HardcorePlay extends AppCompatActivity {
         bundle.putFloat("reaction", reaction);
         gameOverDialog = GameOverDialogFragment.getNewDialogInstance(bundle);
         gameOverDialog.show(getFragmentManager(), null);
+        getFragmentManager().executePendingTransactions();
+        gameOverDialog.getDialog().findViewById(R.id.reset_button).setOnClickListener(this);
+        gameOverDialog.getDialog().findViewById(R.id.back_button).setOnClickListener(this);
     }
 
     public static class SoundDialogFragment extends DialogFragment {

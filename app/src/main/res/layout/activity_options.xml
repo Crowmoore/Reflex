@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/label_sound"
-        android:text="@string/text_sound_volume"
+        android:text="@string/sound_label"
         android:fontFamily="casual"
         android:textSize="18sp"
         android:textColor="@android:color/white"

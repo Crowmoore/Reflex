@@ -2,6 +2,8 @@ package fi.crowmoore.reflextester;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ public class SignInDialogFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
     }
 
@@ -30,7 +33,7 @@ public class SignInDialogFragment extends DialogFragment {
         super.onStart();
         Dialog dialog = getDialog();
         if(dialog != null) {
-            dialog.getWindow().setLayout(1000, 1400);
+            dialog.getWindow().setLayout(1000, 1300);
         }
     }
 }

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="350dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/ic_options_bg"
+        android:id="@+id/background"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_sound"
+        android:text="@string/sound_label"
+        android:fontFamily="casual"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="140dp"
+        android:textColor="@android:color/white"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mute_sound"
+        app:buttonTint="@android:color/white"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:layout_marginTop="140dp"
+        android:layout_marginLeft="210dp"
+        android:layout_marginStart="210dp" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/info"
+        android:paddingStart="2dp"
+        android:paddingLeft="2dp"
+        android:layout_alignParentLeft="true"
+        android:text=""
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/label_sound"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="200dp"/>
+
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Out"
+        android:visibility="invisible"
+        android:layout_marginTop="60dp"
+        android:layout_alignTop="@+id/info"
+        android:layout_alignLeft="@+id/info"
+        android:layout_alignStart="@+id/info"/>
+
+    <com.google.android.gms.common.SignInButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sign_in_button"
+        android:layout_marginTop="60dp"
+        android:layout_alignTop="@+id/info"
+        android:layout_alignLeft="@+id/info"
+        android:layout_alignStart="@+id/info" />
+
+</RelativeLayout>

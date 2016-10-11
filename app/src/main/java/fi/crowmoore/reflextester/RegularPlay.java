@@ -30,7 +30,7 @@ import java.util.Random;
 
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
-public class RegularPlay extends AppCompatActivity {
+public class RegularPlay extends AppCompatActivity implements View.OnClickListener {
 
     private boolean explicitSignOut = false;
 
@@ -385,15 +385,23 @@ public class RegularPlay extends AppCompatActivity {
         running = true;
     }
 
-    public void onBackButtonClick(View view) {
+    public void onBackButtonClick() {
         gameOverDialog.dismiss();
         this.finish();
         overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
     }
-    public void onResetButtonClicked(View view) {
+    public void onResetButtonClicked() {
         gameOverDialog.dismiss();
         initializeGame();
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.back_button: onBackButtonClick(); break;
+            case R.id.reset_button: onResetButtonClicked(); break;
+        }
     }
 
     private void initializeListeners() {
@@ -467,6 +475,9 @@ public class RegularPlay extends AppCompatActivity {
         bundle.putFloat("reaction", reaction);
         gameOverDialog = GameOverDialogFragment.getNewDialogInstance(bundle);
         gameOverDialog.show(getFragmentManager(), null);
+        getFragmentManager().executePendingTransactions();
+        gameOverDialog.getDialog().findViewById(R.id.reset_button).setOnClickListener(this);
+        gameOverDialog.getDialog().findViewById(R.id.back_button).setOnClickListener(this);
     }
 
     protected void touchEventsAllowed(boolean value) {
