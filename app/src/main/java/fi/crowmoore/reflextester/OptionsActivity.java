@@ -8,27 +8,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
-import com.google.example.games.basegameutils.BaseGameUtils;
-
-import java.sql.Ref;
-
-import static fi.crowmoore.reflextester.MainActivity.RC_SIGN_IN;
 
 public class OptionsActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String PREFERENCES = "PreferencesFile";
     private TextView signInInfo;
-    private GoogleApiClient googleApiClient;
-    private boolean signInClicked = false;
-    private boolean resolvingConnectionFailure = false;
-    private boolean autoStartSignInFlow = true;
-    private boolean signInFlow = false;
     private boolean explicitSignOut = false;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
@@ -85,7 +73,6 @@ public class OptionsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void signIn() {
-        signInClicked = true;
         editor.putBoolean("ExplicitSignOut", false);
         editor.apply();
         reflex.setManager(this);
@@ -96,7 +83,6 @@ public class OptionsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void signOut() {
-        signInClicked = false;
         editor.putBoolean("ExplicitSignOut", true);
         editor.apply();
         if (reflex.getManager().isConnected()) {

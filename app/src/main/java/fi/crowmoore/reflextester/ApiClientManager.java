@@ -1,20 +1,12 @@
 package fi.crowmoore.reflextester;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.fitness.data.Application;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
@@ -96,8 +88,6 @@ public class ApiClientManager implements GoogleApiClient.ConnectionCallbacks,
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         Log.d("APIClient", "ApiClient connection failed: " + result.toString());
-//        Intent signInIntent = Games.getSignInIntent(client);
-//        startActivityForResult(signInIntent, RC_SIGN_IN);
         if(resolvingConnectionFailure) {
             return;
         }

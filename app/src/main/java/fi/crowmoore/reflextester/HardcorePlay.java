@@ -20,37 +20,21 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.games.leaderboard.LeaderboardScore;
-import com.google.android.gms.games.leaderboard.LeaderboardVariant;
-import com.google.android.gms.games.leaderboard.Leaderboards;
-import com.google.example.games.basegameutils.BaseGameUtils;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
-import static fi.crowmoore.reflextester.MainActivity.RC_SIGN_IN;
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
 public class HardcorePlay extends AppCompatActivity {
 
-    private GoogleApiClient googleApiClient;
-    private boolean resolvingConnectionFailure = false;
-    private boolean signInClicked = false;
-    private boolean autoStartSignInFlow = true;
-    private boolean signInFlow = false;
     private boolean explicitSignOut = false;
 
     private int score;
@@ -59,10 +43,6 @@ public class HardcorePlay extends AppCompatActivity {
     private ImageButton green;
     private ImageButton yellow;
     private TextView scoreView;
-    private TextView scoreResult;
-    private TextView highscoreResult;
-    private TextView tapCount;
-    private TextView averageTime;
     private TextView countdownText;
     private List<String> commandsList;
     private List<Long> commandTimesList;
@@ -85,7 +65,6 @@ public class HardcorePlay extends AppCompatActivity {
     private GameOverDialogFragment gameOverDialog;
     private Countdown countdown;
     private boolean muted;
-    private Dialog scoreDialog;
     private SoundDialogFragment soundDialog;
     private int taps;
     private final int FIRST = 0;

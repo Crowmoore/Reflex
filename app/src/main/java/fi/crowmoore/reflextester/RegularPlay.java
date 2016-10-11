@@ -1,65 +1,37 @@
 package fi.crowmoore.reflextester;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.CountDownTimer;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.games.leaderboard.LeaderboardScore;
-import com.google.android.gms.games.leaderboard.LeaderboardVariant;
-import com.google.android.gms.games.leaderboard.Leaderboards;
-import com.google.example.games.basegameutils.BaseGameUtils;
 
-import org.w3c.dom.Text;
-
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
-import java.util.logging.Handler;
 
-import static fi.crowmoore.reflextester.MainActivity.RC_SIGN_IN;
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
 public class RegularPlay extends AppCompatActivity {
 
-    private GoogleApiClient googleApiClient;
-    private boolean resolvingConnectionFailure = false;
-    private boolean signInClicked = false;
-    private boolean autoStartSignInFlow = true;
-    private boolean signInFlow = false;
     private boolean explicitSignOut = false;
 
     private int score;
@@ -68,10 +40,6 @@ public class RegularPlay extends AppCompatActivity {
     private AppCompatImageButton green;
     private AppCompatImageButton yellow;
     private TextView scoreView;
-    private TextView scoreResult;
-    private TextView highscoreResult;
-    private TextView tapCount;
-    private TextView averageTime;
     private TextView countdownText;
     private List<String> commandsList;
     private List<Long> commandTimesList;
@@ -86,8 +54,6 @@ public class RegularPlay extends AppCompatActivity {
     private int high1;
     private int high2;
     private boolean muted;
-    private boolean touchAllowed;
-    private Dialog scoreDialog;
     private Countdown countdown;
     private SharedPreferences settings;
     private SharedPreferences.Editor editor;
