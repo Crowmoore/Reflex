@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="250dp"
-    android:layout_height="250dp"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sound_alert"
-        android:text="No sound"
-        android:fontFamily="casual"
-        android:layout_centerHorizontal="true"
-        android:textSize="30sp"/>
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srcCompat="@drawable/ic_nosound_bg"
+        android:id="@+id/background"
+        android:background="@android:color/transparent"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,35 +19,36 @@
         android:id="@+id/no_sound_info"
         android:text="Hardcore mode doesn't have any visual indicator about what button to press next. You must rely on your MEMORY and on the SOUNDS the buttons make on activation. Only a madman would try this without sounds. Are you a madman?"
         android:fontFamily="casual"
-        android:textSize="16sp"
-        android:padding="2dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp" />
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginTop="120dp" />
 
-    <Button
-        android:text="No"
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="125dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_below="@+id/no_sound_info"
+        android:layout_height="60dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="onNoMadmanClicked"
-        android:fontFamily="casual"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="30dp"
+        app:srcCompat="@drawable/ic_button_no"
+        android:background="@android:color/transparent"
         android:id="@+id/dialog_madman_no" />
 
-    <Button
-        android:text="Yes"
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="125dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_below="@+id/no_sound_info"
-        android:onClick="onYesMadmanClicked"
-        android:id="@+id/dialog_madman_yes"
-        android:fontFamily="casual"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp"
+        app:srcCompat="@drawable/ic_button_yes"
+        android:background="@android:color/transparent"
+        android:id="@+id/dialog_madman_yes" />
 
 </RelativeLayout>

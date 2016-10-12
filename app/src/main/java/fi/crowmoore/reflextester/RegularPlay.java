@@ -82,17 +82,14 @@ public class RegularPlay extends AppCompatActivity implements View.OnClickListen
         initializeComponents();
 
         if(!explicitSignOut && reflex.getManager() == null) {
-            Log.d("Regular", "manager is null");
             reflex.setManager(this);
             achievementManager = new AchievementManager(reflex.getManager().getApiClient());
             startGame();
-        } else if(!explicitSignOut && reflex.getManager().isConnected()) {
-            Log.d("Regular", "manager is connected");
+        } else if(reflex.getManager() != null && reflex.getManager().isConnected()) {
             reflex.getManager().setActivity(this);
             achievementManager = new AchievementManager(reflex.getManager().getApiClient());
             startGame();
         } else {
-            Log.d("Regular", "manager signed out");
             startGame();
         }
     }
@@ -143,7 +140,9 @@ public class RegularPlay extends AppCompatActivity implements View.OnClickListen
 
     protected void endGame() {
         running = false;
-        soundPool.release();
+        if(soundPool != null) {
+            soundPool.release();
+        }
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Regular");
         boolean newHighscore = highscore.isHighscore();
         if(reflex.getManager() != null && reflex.getManager().isConnected()) {

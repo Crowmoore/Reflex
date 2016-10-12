@@ -12,6 +12,6 @@
     <string name="banner_ad_unit_id_regular">ca-app-pub-6999054457732372/5233968441</string>
     <string name="banner_ad_unit_id_hardcore">ca-app-pub-6999054457732372/3844633642</string>
 
-    <string name="not_signed_in">You need to be signed in to Google Play Services in order to get achievements and compete on the leaderboards</string>
+    <string name="not_signed_in">Not signed in to Google Play Services</string>
     <string name="signed_in">Signed in to Google Play Services</string>
 </resources>

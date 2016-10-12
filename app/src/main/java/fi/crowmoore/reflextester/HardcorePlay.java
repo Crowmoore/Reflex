@@ -18,6 +18,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -65,7 +66,6 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
     private GameOverDialogFragment gameOverDialog;
     private Countdown countdown;
     private boolean muted;
-    private SoundDialogFragment soundDialog;
     private int taps;
     private final int FIRST = 0;
     private final int DECREMENT_AMOUNT = 2;
@@ -84,38 +84,27 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
         muted = settings.getBoolean("Muted", false);
         editor = settings.edit();
 
-        if(muted) {
-            soundDialog = new SoundDialogFragment();
-            soundDialog.show(getFragmentManager(), null);
-        } else {
-            initializeGame();
-        }
+        initializeGame();
     }
 
     public void initializeGame() {
         initializeComponents();
 
         if(!explicitSignOut && reflex.getManager() == null) {
-            Log.d("Regular", "manager is null");
             reflex.setManager(this);
             achievementManager = new AchievementManager(reflex.getManager().getApiClient());
             startGame();
-        } else if(!explicitSignOut && reflex.getManager().isConnected()) {
-            Log.d("Regular", "manager is connected");
+        } else if(reflex.getManager() != null && reflex.getManager().isConnected()) {
             reflex.getManager().setActivity(this);
             achievementManager = new AchievementManager(reflex.getManager().getApiClient());
             startGame();
         } else {
-            Log.d("Regular", "manager signed out");
             startGame();
         }
     }
 
     public void startGame() {
         touchEventsAllowed(false);
-        if(madman && reflex.getManager() != null && reflex.getManager().isConnected() && achievementManager != null) {
-            achievementManager.unlockAchievement(getString(R.string.achievement_verified_madman));
-        }
         countdown.execute();
     }
 
@@ -158,7 +147,9 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
 
     protected void endGame() {
         running = false;
-        soundPool.release();
+        if(soundPool != null) {
+            soundPool.release();
+        }
         HighscoreManager highscore = new HighscoreManager(getBaseContext(), score, "Hardcore");
         boolean newHighscore = highscore.isHighscore();
         if(reflex.getManager() != null && reflex.getManager().isConnected()) {
@@ -467,32 +458,6 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
         getFragmentManager().executePendingTransactions();
         gameOverDialog.getDialog().findViewById(R.id.reset_button).setOnClickListener(this);
         gameOverDialog.getDialog().findViewById(R.id.back_button).setOnClickListener(this);
-    }
-
-    public static class SoundDialogFragment extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-
-            final View dialogView = inflater.inflate(R.layout.hc_sound_dialog, null);
-            builder.setView(dialogView);
-            return builder.create();
-        }
-    }
-
-    public void onNoMadmanClicked(View view) {
-        muted = false;
-        editor.putBoolean("Muted", false);
-        editor.apply();
-        soundDialog.dismiss();
-        initializeGame();
-    }
-
-    public void onYesMadmanClicked(View view) {
-        madman = true;
-        soundDialog.dismiss();
-        initializeGame();
     }
 
     protected void touchEventsAllowed(boolean value) {

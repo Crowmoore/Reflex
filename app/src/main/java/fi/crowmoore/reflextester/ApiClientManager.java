@@ -21,7 +21,6 @@ public class ApiClientManager implements GoogleApiClient.ConnectionCallbacks,
 
     private GoogleApiClient client;
     private Activity context;
-    private Activity activity;
 
     private boolean signInClicked = false;
     private boolean resolvingConnectionFailure = false;
@@ -56,7 +55,6 @@ public class ApiClientManager implements GoogleApiClient.ConnectionCallbacks,
     public void disconnect() {
         if(client != null && client.isConnected()) {
             client.disconnect();
-            Toast.makeText(context, "Disconnected", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -70,13 +68,12 @@ public class ApiClientManager implements GoogleApiClient.ConnectionCallbacks,
                 .addOnConnectionFailedListener(this)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
-        Log.d("APIClient", client.toString());
+        Log.d("APIClient ", client.toString());
     }
 
     @Override
     public void onConnected(Bundle bundle) {
         Log.d("APIClient", "ApiClient connected");
-        Toast.makeText(context, "Connected", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -27,8 +27,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private AchievementManager achievementManager;
     private OptionsDialogFragment optionsDialog;
     private StatsDialogFragment statsDialog;
+    private SoundDialogFragment soundDialog;
     private SignInDialogFragment signInDialog;
     private boolean explicitSignOut = false;
+    private boolean muted = false;
     private String mode;
     private Reflex reflex;
     private TextView signInInfo;
@@ -47,6 +49,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         settings = getApplicationContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
         editor = settings.edit();
         explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
+        muted = settings.getBoolean("Muted", false);
+
         if(!explicitSignOut) {
             reflex.setManager(this);
             achievementManager = new AchievementManager(reflex.getManager().getApiClient());
@@ -57,8 +61,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onResume() {
         super.onResume();
-        if(!explicitSignOut && reflex.getManager() != null) {
+        if(!explicitSignOut && reflex.getManager() == null) {
             reflex.getManager().setActivity(this);
+        }
+        if(!explicitSignOut && !reflex.getManager().isConnected()) {
+            reflex.getManager().connect();
         }
     }
 
@@ -72,31 +79,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void startRegularPlay() {
-        if(reflex.getManager() != null && reflex.getManager().isConnected()) {
-            startActivity(new Intent(MainActivity.this, RegularPlay.class));
-            overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
-        } else {
-            mode = "Regular";
-            signInDialog = new SignInDialogFragment();
-            signInDialog.show(getFragmentManager(), null);
-            getFragmentManager().executePendingTransactions();
-            signInDialog.getDialog().findViewById(R.id.dialog_sign_in_button).setOnClickListener(this);
-            signInDialog.getDialog().findViewById(R.id.dialog_not_now_button).setOnClickListener(this);
-        }
+        startActivity(new Intent(MainActivity.this, RegularPlay.class));
+        overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
     }
 
     public void startHardcorePlay() {
-        if(reflex.getManager() != null && reflex.getManager().isConnected()) {
+        muted = settings.getBoolean("Muted", false);
+        if(!muted) {
             startActivity(new Intent(MainActivity.this, HardcorePlay.class));
             overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
         } else {
-            mode = "Hardcore";
-            signInDialog = new SignInDialogFragment();
-            signInDialog.show(getFragmentManager(), null);
-            getFragmentManager().executePendingTransactions();
-            signInDialog.getDialog().findViewById(R.id.dialog_sign_in_button).setOnClickListener(this);
-            signInDialog.getDialog().findViewById(R.id.dialog_not_now_button).setOnClickListener(this);
+            openSoundDialog();
         }
+    }
+
+    public void openSoundDialog() {
+        soundDialog = new SoundDialogFragment();
+        soundDialog.show(getFragmentManager(), null);
+        getFragmentManager().executePendingTransactions();
+        soundDialog.getDialog().findViewById(R.id.dialog_madman_no).setOnClickListener(this);
+        soundDialog.getDialog().findViewById(R.id.dialog_madman_yes).setOnClickListener(this);
     }
 
     public void openOptions() {
@@ -150,10 +152,31 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.dialog_sign_in_button: onSignInClicked(); break;
             case R.id.dialog_not_now_button: onNotNowClicked(); break;
             case R.id.close_button: statsDialog.dismiss(); break;
+            case R.id.dialog_madman_no: onNoMadmanClicked(); break;
+            case R.id.dialog_madman_yes: onYesMadmanClicked(); break;
         }
     }
 
+    public void onNoMadmanClicked() {
+        muted = false;
+        editor.putBoolean("Muted", false);
+        editor.apply();
+        soundDialog.dismiss();
+        startActivity(new Intent(MainActivity.this, HardcorePlay.class));
+        overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
+    }
+
+    public void onYesMadmanClicked() {
+        if(!explicitSignOut && reflex.getManager().isConnected()) {
+            achievementManager.unlockAchievement(getString(R.string.achievement_verified_madman));
+        }
+        soundDialog.dismiss();
+        startActivity(new Intent(MainActivity.this, HardcorePlay.class));
+        overridePendingTransition(R.anim.open_activity, R.anim.close_activity);
+    }
+
     public void onOptionsSignInClicked() {
+        explicitSignOut = false;
         editor.putBoolean("ExplicitSignOut", false);
         editor.apply();
         reflex.setManager(this);
@@ -163,6 +186,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void onOptionsSignOutClicked() {
+        explicitSignOut = true;
         editor.putBoolean("ExplicitSignOut", true);
         editor.apply();
         if (reflex.getManager().isConnected()) {
@@ -183,22 +207,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void showAchievements() {
         if(reflex.getManager() != null && reflex.getManager().isConnected()) {
+            achievementManager = new AchievementManager(reflex.getManager().getApiClient());
             startActivityForResult(achievementManager.getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
         }
     }
 
     public void onNotNowClicked() {
+        explicitSignOut = true;
         editor.putBoolean("ExplicitSignOut", true);
         editor.apply();
         startGame();
     }
 
     public void onSignInClicked() {
+        explicitSignOut = false;
         editor.putBoolean("ExplicitSignOut", false);
         editor.apply();
         reflex.setManager(this);
-        startGame();
-
+        if(reflex.getManager() != null && reflex.getManager().isConnected()) {
+            startGame();
+        }
     }
 
     private void startGame() {
