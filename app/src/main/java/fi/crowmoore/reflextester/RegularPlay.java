@@ -49,10 +49,10 @@ public class RegularPlay extends AppCompatActivity implements View.OnClickListen
     private int previous;
     private SoundPool soundPool;
     private boolean loaded;
-    private int low1;
-    private int low2;
-    private int high1;
-    private int high2;
+    private int sound1;
+    private int sound2;
+    private int sound3;
+    private int sound4;
     private boolean muted;
     private Countdown countdown;
     private SharedPreferences settings;
@@ -294,16 +294,16 @@ public class RegularPlay extends AppCompatActivity implements View.OnClickListen
     private void highlightCommand(String command) {
         switch(command) {
             case "Blue": blue.setImageResource(R.drawable.ic_blue_on);
-                         playSound(low1);
+                         playSound(sound1);
                          break;
             case "Red": red.setImageResource(R.drawable.ic_red_on);
-                        playSound(low2);
+                        playSound(sound2);
                         break;
             case "Green": green.setImageResource(R.drawable.ic_green_on);
-                          playSound(high1);
+                          playSound(sound3);
                           break;
             case "Yellow": yellow.setImageResource(R.drawable.ic_yellow_on);
-                           playSound(high2);
+                           playSound(sound4);
                            break;
         }
     }
@@ -367,10 +367,7 @@ public class RegularPlay extends AppCompatActivity implements View.OnClickListen
         reactionTime = new ReactionTime();
 
         createSoundPool();
-        low1 = soundPool.load(RegularPlay.this, R.raw.low1, 1);
-        low2 = soundPool.load(RegularPlay.this, R.raw.low2, 1);
-        high1 = soundPool.load(RegularPlay.this, R.raw.high1, 1);
-        high2 = soundPool.load(RegularPlay.this, R.raw.high2, 1);
+        initializeSoundPool();
 
         MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id_for_ads));
         adView = (AdView) findViewById(R.id.adView);
@@ -382,6 +379,28 @@ public class RegularPlay extends AppCompatActivity implements View.OnClickListen
         selection = 0;
         previous = 0;
         running = true;
+    }
+
+    private void initializeSoundPool() {
+        String soundset = settings.getString("Soundset", "Frequencies");
+        switch(soundset) {
+            case "Frequencies": sound1 = soundPool.load(RegularPlay.this, R.raw.low1, 1);
+                                sound2 = soundPool.load(RegularPlay.this, R.raw.low2, 1);
+                                sound3 = soundPool.load(RegularPlay.this, R.raw.high1, 1);
+                                sound4 = soundPool.load(RegularPlay.this, R.raw.high2, 1); break;
+            case "Farm Animals":sound1 = soundPool.load(RegularPlay.this, R.raw.cat, 1);
+                                sound2 = soundPool.load(RegularPlay.this, R.raw.dog, 1);
+                                sound3 = soundPool.load(RegularPlay.this, R.raw.cow, 1);
+                                sound4 = soundPool.load(RegularPlay.this, R.raw.sheep, 1); break;
+            case "Vinyl Drums": sound1 = soundPool.load(RegularPlay.this, R.raw.vinyl1, 1);
+                                sound2 = soundPool.load(RegularPlay.this, R.raw.vinyl2, 1);
+                                sound3 = soundPool.load(RegularPlay.this, R.raw.vinyl3, 1);
+                                sound4 = soundPool.load(RegularPlay.this, R.raw.vinyl4, 1); break;
+            case "Grand Piano": sound1 = soundPool.load(RegularPlay.this, R.raw.piano1, 1);
+                                sound2 = soundPool.load(RegularPlay.this, R.raw.piano2, 1);
+                                sound3 = soundPool.load(RegularPlay.this, R.raw.piano3, 1);
+                                sound4 = soundPool.load(RegularPlay.this, R.raw.piano4, 1); break;
+        }
     }
 
     public void onBackButtonClick() {

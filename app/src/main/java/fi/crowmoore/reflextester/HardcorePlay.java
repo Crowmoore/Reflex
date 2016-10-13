@@ -54,10 +54,10 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
     private SoundPool soundPool;
     private boolean madman = false;
     private boolean loaded;
-    private int low1;
-    private int low2;
-    private int high1;
-    private int high2;
+    private int sound1;
+    private int sound2;
+    private int sound3;
+    private int sound4;
     private AdView adView;
     private ReactionTime reactionTime;
     private SharedPreferences settings;
@@ -68,8 +68,8 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
     private boolean muted;
     private int taps;
     private final int FIRST = 0;
-    private final int DECREMENT_AMOUNT = 2;
-    private final int MINIMUM_INTERVAL = 500;
+    private final int DECREMENT_AMOUNT = 3;
+    private final int MINIMUM_INTERVAL = 300;
 
     private Reflex reflex;
 
@@ -288,10 +288,10 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
 
     private void highlightCommand(String command) {
         switch(command) {
-            case "Blue": playSound(low1); break;
-            case "Red": playSound(low2); break;
-            case "Green": playSound(high1); break;
-            case "Yellow": playSound(high2); break;
+            case "Blue": playSound(sound1); break;
+            case "Red": playSound(sound2); break;
+            case "Green": playSound(sound3); break;
+            case "Yellow": playSound(sound4); break;
         }
     }
 
@@ -348,10 +348,7 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
         commandTimesList = new ArrayList<>();
 
         createSoundPool();
-        low1 = soundPool.load(HardcorePlay.this, R.raw.low1, 1);
-        low2 = soundPool.load(HardcorePlay.this, R.raw.low2, 1);
-        high1 = soundPool.load(HardcorePlay.this, R.raw.high1, 1);
-        high2 = soundPool.load(HardcorePlay.this, R.raw.high2, 1);
+        initializeSoundPool();
 
         reactionTime = new ReactionTime();
         MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id_for_ads));
@@ -365,6 +362,30 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
         previous = 0;
         running = true;
     }
+
+    private void initializeSoundPool() {
+        String soundset = settings.getString("Soundset", "Frequencies");
+        switch(soundset) {
+            case "Frequencies": sound1 = soundPool.load(HardcorePlay.this, R.raw.low1, 1);
+                                sound2 = soundPool.load(HardcorePlay.this, R.raw.low2, 1);
+                                sound3 = soundPool.load(HardcorePlay.this, R.raw.high1, 1);
+                                sound4 = soundPool.load(HardcorePlay.this, R.raw.high2, 1); break;
+            case "Farm Animals":sound1 = soundPool.load(HardcorePlay.this, R.raw.cat, 1);
+                                sound2 = soundPool.load(HardcorePlay.this, R.raw.dog, 1);
+                                sound3 = soundPool.load(HardcorePlay.this, R.raw.cow, 1);
+                                sound4 = soundPool.load(HardcorePlay.this, R.raw.sheep, 1); break;
+            case "Vinyl Drums": sound1 = soundPool.load(HardcorePlay.this, R.raw.vinyl1, 1);
+                                sound2 = soundPool.load(HardcorePlay.this, R.raw.vinyl2, 1);
+                                sound3 = soundPool.load(HardcorePlay.this, R.raw.vinyl3, 1);
+                                sound4 = soundPool.load(HardcorePlay.this, R.raw.vinyl4, 1); break;
+            case "Grand Piano": sound1 = soundPool.load(HardcorePlay.this, R.raw.piano1, 1);
+                                sound2 = soundPool.load(HardcorePlay.this, R.raw.piano2, 1);
+                                sound3 = soundPool.load(HardcorePlay.this, R.raw.piano3, 1);
+                                sound4 = soundPool.load(HardcorePlay.this, R.raw.piano4, 1); break;
+        }
+    }
+
+
 
     @Override
     public void onClick(View view) {
