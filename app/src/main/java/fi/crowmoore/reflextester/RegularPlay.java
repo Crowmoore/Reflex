@@ -101,6 +101,7 @@ public class RegularPlay extends AppCompatActivity implements View.OnClickListen
 
     public void onPause() {
         super.onPause();
+        reflex.getMusicManager().pause();
         endGame();
         gameOverDialog.dismiss();
         finish();
@@ -194,6 +195,7 @@ public class RegularPlay extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onResume() {
         super.onResume();
+        reflex.getMusicManager().play();
         if(!explicitSignOut) {
             reflex.getManager().setActivity(this);
         }

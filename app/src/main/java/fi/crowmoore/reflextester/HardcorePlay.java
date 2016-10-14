@@ -110,6 +110,7 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
 
     public void onPause() {
         super.onPause();
+        reflex.getMusicManager().pause();
         endGame();
         gameOverDialog.dismiss();
         finish();
@@ -201,6 +202,7 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
+        reflex.getMusicManager().play();
         if(!explicitSignOut) {
             reflex.getManager().setActivity(this);
         }

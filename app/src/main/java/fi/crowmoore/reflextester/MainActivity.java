@@ -3,8 +3,13 @@ package fi.crowmoore.reflextester;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -15,10 +20,15 @@ import android.widget.TextView;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.games.Games;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+
 import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
+    public static final String RESOURCE_PREFIX = "android.resource://fi.crowmoore.reflextester/";
     public static final int RC_SIGN_IN = 9001;
     public static final int REQUEST_LEADERBOARD = 100;
     public static final int REQUEST_ACHIEVEMENTS = 101;
@@ -30,11 +40,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private StatsDialogFragment statsDialog;
     private SoundDialogFragment soundDialog;
     private SignInDialogFragment signInDialog;
+    private MediaPlayer player;
     private boolean explicitSignOut = false;
     private boolean muted = false;
+    private float volume;
+    private ArrayList<Integer> playlist;
+    private Map<Integer, String> songDictionary;
     private String mode;
+    private int currentSong;
     private Reflex reflex;
     private TextView signInInfo;
+    private TextView songName;
     private SignInButton signInButton;
     private Button signOutButton;
 
@@ -44,6 +60,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.activity_main);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
+        songName = (TextView) findViewById(R.id.song_name);
+
         setOnClickListeners();
         reflex = (Reflex) getApplicationContext();
 
@@ -51,6 +69,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         editor = settings.edit();
         explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
         muted = settings.getBoolean("Muted", false);
+        volume = settings.getFloat("Volume", 0.5f);
+
+        reflex.setMusicManager(this);
+        reflex.getMusicManager().setVolume(volume);
+        reflex.getMusicManager().play();
+        songName.setText(reflex.getMusicManager().getSong());
 
         if(!explicitSignOut) {
             reflex.setManager(this);
@@ -68,8 +92,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        reflex.getMusicManager().pause();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        reflex.getMusicManager().play();
         if(!explicitSignOut && reflex.getManager() == null) {
             reflex.getManager().setActivity(this);
         }

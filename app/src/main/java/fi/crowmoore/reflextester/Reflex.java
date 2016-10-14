@@ -13,9 +13,18 @@ import java.sql.Ref;
 public class Reflex extends Application {
 
     private ApiClientManager manager = null;
+    private MusicManager musicManager = null;
 
     public void setManager(Activity context) {
         manager = new ApiClientManager(context);
+    }
+
+    public void setMusicManager(Activity context) {
+        musicManager = new MusicManager(context);
+    }
+
+    public MusicManager getMusicManager() {
+        return musicManager;
     }
 
     public ApiClientManager getManager() {

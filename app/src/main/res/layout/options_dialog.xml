@@ -39,7 +39,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginLeft="35dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="260dp"
         android:textColor="@android:color/white"
         android:layout_alignLeft="@id/background"
         android:layout_alignTop="@id/background"
@@ -60,12 +60,35 @@
         android:layout_marginLeft="210dp"
         android:layout_marginStart="210dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_volume"
+        android:text="@string/music_volume"
+        android:fontFamily="casual"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="200dp"/>
+
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/soundset_spinner"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="260dp"
         android:layout_marginLeft="160dp"/>
+
+    <SeekBar
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/volume_slider"
+        android:layout_marginTop="205dp"
+        android:layout_marginLeft="160dp"
+        android:progressTint="@android:color/white"
+        android:thumbTint="@android:color/white"
+        android:progress="50"
+        android:max="100" />
 
     <TextView
         android:layout_width="200dp"
