@@ -29,6 +29,7 @@
         android:layout_alignRight="@id/background"
         android:layout_marginTop="100dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:text="Regular highscore: "/>
 
     <TextView
@@ -45,6 +46,7 @@
         android:layout_alignRight="@id/background"
         android:layout_marginTop="140dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:text="Hardcore highscore: "/>
 
     <TextView
@@ -61,6 +63,7 @@
         android:layout_alignRight="@id/background"
         android:layout_marginTop="180dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:text="Regular games played: "/>
 
     <TextView
@@ -77,6 +80,7 @@
         android:layout_alignRight="@id/background"
         android:layout_marginTop="220dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:text="hardcore games played: "/>
 
     <TextView
@@ -93,6 +97,7 @@
         android:layout_alignRight="@id/background"
         android:layout_marginTop="260dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:text="Regular reaction time: "/>
 
     <TextView
@@ -109,6 +114,7 @@
         android:layout_alignRight="@id/background"
         android:layout_marginTop="300dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:text="Hardcore reaction time: "/>
 
     <TextView
@@ -125,6 +131,7 @@
         android:layout_alignRight="@id/background"
         android:layout_marginTop="340dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:text="Total taps: "/>
 
     <android.support.v7.widget.AppCompatImageButton

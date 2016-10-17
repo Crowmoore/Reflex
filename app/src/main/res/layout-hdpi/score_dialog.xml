@@ -20,6 +20,7 @@
         android:text=""
         android:textColor="@android:color/white"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:textStyle="bold"
         android:layout_alignLeft="@id/background"
         android:layout_alignTop="@id/background"
@@ -37,6 +38,7 @@
         android:textColor="@android:color/white"
         android:fontFamily="casual"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:textStyle="bold"
         android:layout_alignLeft="@id/background"
         android:layout_alignTop="@id/background"
@@ -54,6 +56,7 @@
         android:textColor="@android:color/white"
         android:fontFamily="casual"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:textStyle="bold"
         android:layout_alignLeft="@id/background"
         android:layout_alignTop="@id/background"
@@ -71,6 +74,7 @@
         android:textColor="@android:color/white"
         android:fontFamily="casual"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:textStyle="bold"
         android:layout_alignLeft="@id/background"
         android:layout_alignTop="@id/background"
@@ -94,7 +98,8 @@
         app:srcCompat="@drawable/ic_button_tryagain"
         android:background="@android:color/transparent"
         android:layout_marginTop="400dp"
-        android:layout_marginLeft="30dp"/>
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"/>
 
     <android.support.v7.widget.AppCompatImageButton
         android:layout_width="115dp"
@@ -104,6 +109,8 @@
         android:id="@+id/back_button"
         android:layout_marginTop="4000dp"
         android:layout_toRightOf="@id/reset_button"
-        android:layout_marginLeft="30dp"/>
+        android:layout_toEndOf="@id/reset_button"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"/>
 
 </RelativeLayout>

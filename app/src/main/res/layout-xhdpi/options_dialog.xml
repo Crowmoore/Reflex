@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/info"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:text=""
         android:layout_alignLeft="@id/background"
         android:layout_alignTop="@id/background"
@@ -25,6 +26,7 @@
         android:layout_alignRight="@id/background"
         android:textColor="@android:color/white"
         android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="360dp"/>
 
     <Button
@@ -57,7 +59,9 @@
         android:scaleY="2"
         android:layout_alignBottom="@+id/label_sound"
         android:layout_toRightOf="@id/label_sound"
-        android:layout_marginLeft="80dp"/>
+        android:layout_toEndOf="@id/label_sound"
+        android:layout_marginLeft="80dp"
+        android:layout_marginStart="80dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -65,6 +69,7 @@
         android:id="@+id/label_sound"
         android:text="@string/sound_label"
         android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
         android:fontFamily="casual"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -112,7 +117,9 @@
         android:layout_below="@id/mute_sound"
         android:layout_marginTop="25dp"
         android:layout_toRightOf="@id/label_volume"
-        android:layout_marginLeft="15dp"/>
+        android:layout_toEndOf="@id/label_volume"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"/>
 
     <Spinner
         android:layout_width="wrap_content"
@@ -121,6 +128,8 @@
         android:layout_below="@id/volume_slider"
         android:layout_marginTop="30dp"
         android:layout_toRightOf="@id/label_soundset"
-        android:layout_marginLeft="50dp"/>
+        android:layout_toEndOf="@id/label_soundset"
+        android:layout_marginLeft="50dp"
+        android:layout_marginStart="50dp"/>
 
 </RelativeLayout>
