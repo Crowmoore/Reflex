@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        app:srcCompat="@drawable/ic_leaderboard_bg"
+        android:id="@+id/leaderboards"
+        android:background="@android:color/transparent"/>
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="125dp"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
+        android:id="@+id/regular_leaderboard"
+        android:layout_marginTop="90dp"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/ic_button_regular" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="125dp"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
+        android:id="@+id/hardcore_leaderboard"
+        android:layout_below="@id/regular_leaderboard"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/ic_button_hardcore" />
+
+</RelativeLayout>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="450dp"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent">
+
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        app:srcCompat="@drawable/ic_stats_bg"
+        android:id="@+id/background"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/highscore_regular"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="casual"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="30dp"
+        android:text="Regular highscore: "/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/highscore_hardcore"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="casual"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginTop="140dp"
+        android:layout_marginLeft="30dp"
+        android:text="Hardcore highscore: "/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/games_regular"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="casual"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginTop="180dp"
+        android:layout_marginLeft="30dp"
+        android:text="Regular games played: "/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/games_hardcore"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="casual"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginTop="220dp"
+        android:layout_marginLeft="30dp"
+        android:text="hardcore games played: "/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reaction_regular"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="casual"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginTop="260dp"
+        android:layout_marginLeft="30dp"
+        android:text="Regular reaction time: "/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reaction_hardcore"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="casual"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginTop="300dp"
+        android:layout_marginLeft="30dp"
+        android:text="Hardcore reaction time: "/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/taps_total"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="casual"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginTop="340dp"
+        android:layout_marginLeft="30dp"
+        android:text="Total taps: "/>
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="125dp"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
+        android:id="@+id/close_button"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignBottom="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginTop="360dp"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/ic_button_close" />
+
+</RelativeLayout>

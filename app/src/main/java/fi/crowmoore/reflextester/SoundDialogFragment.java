@@ -33,7 +33,7 @@ public class SoundDialogFragment extends DialogFragment {
         super.onStart();
         Dialog dialog = getDialog();
         if(dialog != null) {
-            dialog.getWindow().setLayout(1000, 1300);
+            //dialog.getWindow().setLayout(1000, 1300);
         }
     }
 }

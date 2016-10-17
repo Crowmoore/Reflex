@@ -43,7 +43,7 @@ public class StatsDialogFragment extends DialogFragment {
         super.onStart();
         Dialog dialog = getDialog();
         if(dialog != null) {
-            dialog.getWindow().setLayout(1000, 1400);
+            //dialog.getWindow().setLayout(1000, 1400);
         }
     }
 

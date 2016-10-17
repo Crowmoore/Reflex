@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_hardcore_play"
     android:layout_width="match_parent"
@@ -12,30 +13,30 @@
     tools:context="fi.crowmoore.reflextester.HardcorePlay"
     android:background="@android:color/black">
 
-    <ImageButton
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_hc_button"
+        app:srcCompat="@drawable/ic_hc_button"
         android:id="@+id/button_red"
         android:background="@null"
         android:layout_alignTop="@+id/button_blue"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <ImageButton
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_hc_button"
+        app:srcCompat="@drawable/ic_hc_button"
         android:id="@+id/button_yellow"
         android:background="@null"
         android:layout_alignTop="@+id/button_green"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <ImageButton
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_hc_button"
+        app:srcCompat="@drawable/ic_hc_button"
         android:layout_marginTop="110dp"
         android:id="@+id/button_blue"
         android:background="@null"
@@ -67,11 +68,11 @@
         android:fontFamily="casual"
         android:textColor="@android:color/white" />
 
-    <ImageButton
+    <android.support.v7.widget.AppCompatImageButton
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/ic_hc_button"
-        android:layout_marginTop="41dp"
+        app:srcCompat="@drawable/ic_hc_button"
+        android:layout_marginTop="20dp"
         android:id="@+id/button_green"
         android:background="@null"
         android:layout_below="@+id/button_blue"

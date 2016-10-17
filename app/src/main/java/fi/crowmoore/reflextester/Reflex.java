@@ -3,6 +3,7 @@ package fi.crowmoore.reflextester;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import java.sql.Ref;
@@ -10,7 +11,7 @@ import java.sql.Ref;
 /**
  * Created by Crowmoore on 09-Oct-16.
  */
-public class Reflex extends Application {
+public class Reflex extends MultiDexApplication {
 
     private ApiClientManager manager = null;
     private MusicManager musicManager = null;

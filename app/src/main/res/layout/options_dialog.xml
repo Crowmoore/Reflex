@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="250dp"
+    android:layout_width="match_parent"
     android:layout_height="350dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/transparent">
 
     <android.support.v7.widget.AppCompatImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="350dp"
         app:srcCompat="@drawable/ic_options_bg"
         android:id="@+id/background"
         android:background="@android:color/transparent"/>
@@ -15,87 +15,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/label_sound"
-        android:text="@string/sound_label"
-        android:fontFamily="casual"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginLeft="35dp"
-        android:layout_marginTop="140dp"
-        android:textColor="@android:color/white"
-        android:layout_alignLeft="@id/background"
-        android:layout_alignTop="@id/background"
-        android:layout_alignBottom="@id/background"
-        android:layout_alignRight="@id/background"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/label_soundset"
-        android:text="@string/soundset_label"
-        android:fontFamily="casual"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginLeft="35dp"
-        android:layout_marginTop="260dp"
-        android:textColor="@android:color/white"
-        android:layout_alignLeft="@id/background"
-        android:layout_alignTop="@id/background"
-        android:layout_alignBottom="@id/background"
-        android:layout_alignRight="@id/background"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <android.support.v7.widget.AppCompatCheckBox
-        android:text=""
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/mute_sound"
-        app:buttonTint="@android:color/white"
-        android:scaleX="2"
-        android:scaleY="2"
-        android:layout_marginTop="140dp"
-        android:layout_marginLeft="210dp"
-        android:layout_marginStart="210dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/label_volume"
-        android:text="@string/music_volume"
-        android:fontFamily="casual"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:layout_marginLeft="35dp"
-        android:layout_marginTop="200dp"/>
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/soundset_spinner"
-        android:layout_marginTop="260dp"
-        android:layout_marginLeft="160dp"/>
-
-    <SeekBar
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/volume_slider"
-        android:layout_marginTop="205dp"
-        android:layout_marginLeft="160dp"
-        android:progressTint="@android:color/white"
-        android:thumbTint="@android:color/white"
-        android:progress="50"
-        android:max="100" />
-
-    <TextView
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
         android:id="@+id/info"
-        android:paddingStart="2dp"
-        android:paddingLeft="2dp"
         android:layout_alignParentLeft="true"
         android:text=""
         android:layout_alignLeft="@id/background"
@@ -125,5 +45,80 @@
         android:layout_alignTop="@+id/info"
         android:layout_alignLeft="@+id/info"
         android:layout_alignStart="@+id/info" />
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mute_sound"
+        app:buttonTint="@android:color/white"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:layout_alignBottom="@+id/label_sound"
+        android:layout_toRightOf="@id/label_sound"
+        android:layout_marginLeft="60dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_sound"
+        android:text="@string/sound_label"
+        android:fontFamily="casual"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="95dp"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_volume"
+        android:text="@string/music_volume"
+        android:fontFamily="casual"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_below="@id/label_sound"
+        android:layout_marginTop="20dp"
+        android:layout_alignLeft="@+id/label_sound"
+        android:layout_alignStart="@+id/label_sound" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/label_soundset"
+        android:text="@string/soundset_label"
+        android:fontFamily="casual"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/label_volume"
+        android:layout_alignLeft="@+id/label_volume"
+        android:layout_alignStart="@+id/label_volume" />
+
+    <SeekBar
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/volume_slider"
+        android:progressTint="@android:color/white"
+        android:thumbTint="@android:color/white"
+        android:scaleY="2"
+        android:progress="50"
+        android:max="100"
+        android:layout_below="@id/mute_sound"
+        android:layout_marginTop="25dp"
+        android:layout_toRightOf="@id/label_volume"
+        android:layout_marginLeft="15dp"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/soundset_spinner"
+        android:layout_below="@id/volume_slider"
+        android:layout_marginTop="30dp"
+        android:layout_toRightOf="@id/label_soundset"
+        android:layout_marginLeft="70dp"/>
 
 </RelativeLayout>

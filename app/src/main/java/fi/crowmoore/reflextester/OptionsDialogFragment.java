@@ -60,7 +60,7 @@ public class OptionsDialogFragment extends DialogFragment implements AdapterView
         super.onStart();
         Dialog dialog = getDialog();
         if(dialog != null) {
-            dialog.getWindow().setLayout(1000, 1200);
+            //dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, 525);
         }
     }
 

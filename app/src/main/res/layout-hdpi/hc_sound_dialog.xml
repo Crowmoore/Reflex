@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        app:srcCompat="@drawable/ic_nosound_bg"
+        android:id="@+id/background"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/no_sound_info"
+        android:text="Hardcore mode doesn't have any visual indicator about what button to press next. You must rely on your MEMORY and on the SOUNDS the buttons make on activation. Only a madman would try this without sounds. Are you a madman?"
+        android:fontFamily="casual"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignLeft="@id/background"
+        android:layout_alignTop="@id/background"
+        android:layout_alignRight="@id/background"
+        android:layout_marginTop="120dp" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="125dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_below="@id/no_sound_info"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/ic_button_no"
+        android:background="@android:color/transparent"
+        android:id="@+id/dialog_madman_no" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="125dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="30dp"
+        android:layout_below="@id/no_sound_info"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/ic_button_yes"
+        android:background="@android:color/transparent"
+        android:id="@+id/dialog_madman_yes" />
+
+</RelativeLayout>

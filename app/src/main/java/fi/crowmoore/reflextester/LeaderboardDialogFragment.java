@@ -27,7 +27,7 @@ public class LeaderboardDialogFragment extends DialogFragment {
         super.onStart();
         Dialog dialog = getDialog();
         if(dialog != null) {
-            dialog.getWindow().setLayout(1000, 800);
+            //dialog.getWindow().setLayout(1000, 800);
         }
     }
 
