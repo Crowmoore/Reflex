@@ -10,6 +10,7 @@
         android:layout_height="350dp"
         app:srcCompat="@drawable/ic_options_bg"
         android:id="@+id/background"
+        android:layout_centerVertical="true"
         android:background="@android:color/transparent"/>
 
     <TextView

@@ -27,7 +27,7 @@
         android:layout_alignRight="@id/background"
         android:textSize="22sp"
         android:fontFamily="casual"
-        android:layout_marginTop="120dp" />
+        android:layout_marginTop="160dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
         android:layout_alignRight="@id/background"
         android:textSize="22sp"
         android:layout_below="@id/score_result"
-        android:layout_marginTop="160dp" />
+        android:layout_marginTop="200dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
         android:layout_alignRight="@id/background"
         android:textSize="22sp"
         android:layout_below="@id/highscore_result"
-        android:layout_marginTop="200dp" />
+        android:layout_marginTop="240dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
         android:layout_alignRight="@id/background"
         android:textSize="22sp"
         android:layout_below="@+id/tap_count"
-        android:layout_marginTop="240dp"/>
+        android:layout_marginTop="280dp"/>
 
     <View
         android:id="@+id/centerShim"
@@ -93,7 +93,7 @@
         android:id="@+id/reset_button"
         app:srcCompat="@drawable/ic_button_tryagain"
         android:background="@android:color/transparent"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="430dp"
         android:layout_marginLeft="30dp"/>
 
     <android.support.v7.widget.AppCompatImageButton
@@ -102,7 +102,7 @@
         android:background="@android:color/transparent"
         app:srcCompat="@drawable/ic_button_back"
         android:id="@+id/back_button"
-        android:layout_marginTop="4000dp"
+        android:layout_marginTop="430dp"
         android:layout_toRightOf="@id/reset_button"
         android:layout_marginLeft="30dp"/>
 

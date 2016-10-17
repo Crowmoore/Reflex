@@ -12,6 +12,7 @@
         android:layout_height="450dp"
         app:srcCompat="@drawable/ic_stats_bg"
         android:id="@+id/background"
+
         android:background="@android:color/transparent"/>
 
     <TextView

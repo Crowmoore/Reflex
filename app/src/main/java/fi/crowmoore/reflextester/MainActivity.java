@@ -167,13 +167,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void showDialog() {
-        //if(reflex.getManager() != null && reflex.getManager().isConnected()) {
+        if(reflex.getManager() != null && reflex.getManager().isConnected()) {
             leaderboardDialog = new LeaderboardDialogFragment();
             leaderboardDialog.show(getFragmentManager(), null);
             getFragmentManager().executePendingTransactions();
             leaderboardDialog.getDialog().findViewById(R.id.regular_leaderboard).setOnClickListener(this);
             leaderboardDialog.getDialog().findViewById(R.id.hardcore_leaderboard).setOnClickListener(this);
-        //}
+        }
     }
 
     @Override
