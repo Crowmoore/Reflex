@@ -21,7 +21,7 @@
     android:id="@+id/text1"
     style="@style/SpinnerItemStyle"
     android:maxLines="1"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:textAlignment="inherit"/>

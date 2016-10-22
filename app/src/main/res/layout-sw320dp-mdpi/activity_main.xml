@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    tools:context="fi.crowmoore.reflextester.MainActivity"
+    android:background="@android:color/black">
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_menu_regular"
+        android:id="@+id/regular_play"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_menu_hardcore"
+        android:id="@+id/hardcore_play"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/regular_play"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_menu_stats"
+        android:id="@+id/stats"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/hardcore_play"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_menu_options"
+        android:id="@+id/options"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_menu_leaderboards"
+        android:id="@+id/leaderboards"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/options"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
+        android:id="@+id/achievements"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/leaderboards"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        app:srcCompat="@drawable/ic_menu_achievements" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        app:srcCompat ="@drawable/ic_title"
+        android:id="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/now_playing"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@android:color/white"
+        android:fontFamily="casual"
+        android:textSize="16dp"
+        android:text="Now playing:"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/song_name"
+        android:singleLine="true"
+        android:scrollHorizontally="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/now_playing"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:textColor="@android:color/white"
+        android:fontFamily="casual"
+        android:textSize="16dp"
+        android:text=""/>
+
+</RelativeLayout>

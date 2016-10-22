@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingLeft="10dp"
-    android:paddingStart="10dp"
-    android:paddingEnd="10dp"
-    android:paddingRight="10dp"
+    android:layout_width="500dp"
+    android:layout_height="600dp"
     android:layout_gravity="center"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/transparent">
 
     <android.support.v7.widget.AppCompatImageView
-        android:layout_width="300dp"
-        android:layout_height="450dp"
-        app:srcCompat="@drawable/ic_gameover_bg"
+        android:layout_width="500dp"
+        android:layout_height="600dp"
+        app:srcCompat="@drawable/ic_gameover_bg_large"
         android:id="@+id/background"
+        android:layout_centerVertical="true"
         android:background="@android:color/transparent"/>
 
     <TextView
@@ -22,13 +19,15 @@
         android:layout_height="wrap_content"
         android:id="@+id/score_result"
         android:text=""
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:textColor="@android:color/white"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
         android:textStyle="bold"
-        android:textSize="22sp"
+        android:textSize="26sp"
         android:fontFamily="casual"
-        android:layout_marginTop="100dp" />
+        android:layout_marginTop="140dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,13 +35,15 @@
         android:id="@+id/highscore_result"
         android:text=""
         android:textColor="@android:color/white"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:fontFamily="casual"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
         android:textStyle="bold"
-        android:textSize="22sp"
+        android:textSize="26sp"
         android:layout_below="@id/score_result"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="40dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -51,12 +52,14 @@
         android:text=""
         android:textColor="@android:color/white"
         android:fontFamily="casual"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
         android:textStyle="bold"
-        android:textSize="22sp"
+        android:textSize="26sp"
         android:layout_below="@id/highscore_result"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="40dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -64,26 +67,15 @@
         android:id="@+id/reaction_time"
         android:text=""
         android:textColor="@android:color/white"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:fontFamily="casual"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
         android:textStyle="bold"
-        android:textSize="22sp"
+        android:textSize="26sp"
         android:layout_below="@+id/tap_count"
-        android:layout_marginTop="30dp"/>
-
-    <android.support.v7.widget.AppCompatImageButton
-        android:layout_width="115dp"
-        android:layout_height="60dp"
-        android:background="@android:color/transparent"
-        app:srcCompat="@drawable/ic_button_back"
-        android:id="@+id/back_button"
-        android:layout_below="@id/reaction_time"
-        android:layout_marginTop="50dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp"/>
+        android:layout_marginTop="40dp"/>
 
     <android.support.v7.widget.AppCompatImageButton
         android:layout_width="115dp"
@@ -92,10 +84,19 @@
         app:srcCompat="@drawable/ic_button_tryagain"
         android:background="@android:color/transparent"
         android:layout_below="@id/reaction_time"
-        android:layout_marginTop="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"/>
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:layout_width="115dp"
+        android:layout_height="60dp"
+        android:background="@android:color/transparent"
+        app:srcCompat="@drawable/ic_button_back"
+        android:layout_below="@id/reaction_time"
+        android:id="@+id/back_button"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="355dp"
+        android:layout_marginStart="355dp"/>
 
 </RelativeLayout>
