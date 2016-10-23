@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="500dp"
-    android:layout_height="600dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/transparent">
 
     <android.support.v7.widget.AppCompatImageView
-        android:layout_width="500dp"
-        android:layout_height="600dp"
+        android:layout_width="400dp"
+        android:layout_height="500dp"
         app:srcCompat="@drawable/ic_gameover_bg_large"
         android:id="@+id/background"
         android:layout_centerVertical="true"
@@ -27,7 +27,7 @@
         android:textStyle="bold"
         android:textSize="26sp"
         android:fontFamily="casual"
-        android:layout_marginTop="140dp" />
+        android:layout_marginTop="100dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -84,9 +84,9 @@
         app:srcCompat="@drawable/ic_button_tryagain"
         android:background="@android:color/transparent"
         android:layout_below="@id/reaction_time"
-        android:layout_marginTop="80dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginStart="30dp"/>
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"/>
 
     <android.support.v7.widget.AppCompatImageButton
         android:layout_width="115dp"
@@ -95,8 +95,8 @@
         app:srcCompat="@drawable/ic_button_back"
         android:layout_below="@id/reaction_time"
         android:id="@+id/back_button"
-        android:layout_marginTop="80dp"
-        android:layout_marginLeft="355dp"
-        android:layout_marginStart="355dp"/>
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="260dp"
+        android:layout_marginStart="260dp"/>
 
 </RelativeLayout>

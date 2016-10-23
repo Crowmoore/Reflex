@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="500dp"
-    android:layout_height="600dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:paddingLeft="20dp"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
@@ -11,8 +11,8 @@
     android:background="@android:color/transparent">
 
     <android.support.v7.widget.AppCompatImageView
-        android:layout_width="500dp"
-        android:layout_height="600dp"
+        android:layout_width="400dp"
+        android:layout_height="500dp"
         app:srcCompat="@drawable/ic_options_bg_large"
         android:id="@+id/background"
         android:layout_centerVertical="true"
@@ -29,7 +29,7 @@
         android:textColor="@android:color/white"
         android:layout_marginLeft="25dp"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="450dp"/>
+        android:layout_marginTop="390dp"/>
 
     <Button
         android:id="@+id/sign_out_button"
@@ -107,7 +107,7 @@
         android:layout_alignStart="@+id/label_volume" />
 
     <SeekBar
-        android:layout_width="150dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:id="@+id/volume_slider"
         android:progressTint="@android:color/white"
@@ -131,7 +131,7 @@
         android:layout_marginTop="60dp"
         android:layout_toRightOf="@id/label_soundset"
         android:layout_toEndOf="@id/label_soundset"
-        android:layout_marginLeft="150dp"
-        android:layout_marginStart="150dp"/>
+        android:layout_marginLeft="100dp"
+        android:layout_marginStart="100dp"/>
 
 </RelativeLayout>

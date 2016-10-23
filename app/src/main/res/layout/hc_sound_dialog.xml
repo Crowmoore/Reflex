@@ -36,10 +36,8 @@
     <android.support.v7.widget.AppCompatImageButton
         android:layout_width="125dp"
         android:layout_height="60dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="15dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginLeft="160dp"
+        android:layout_marginStart="160dp"
         android:layout_below="@id/no_sound_info"
         android:layout_marginTop="10dp"
         app:srcCompat="@drawable/ic_button_no"

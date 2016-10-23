@@ -7,8 +7,8 @@
     android:background="@android:color/transparent">
 
     <android.support.v7.widget.AppCompatImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
         app:srcCompat="@drawable/ic_leaderboard_bg_large"
         android:id="@+id/leaderboards"
         android:layout_centerVertical="true"
