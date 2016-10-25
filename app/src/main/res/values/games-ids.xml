@@ -20,6 +20,11 @@
     <string name="achievement_hardcore_expert">CgkI1sfZypEcEAIQFQ</string>
     <string name="achievement_hardcore_grandmaster">CgkI1sfZypEcEAIQFg</string>
     <string name="achievement_verified_madman">CgkI1sfZypEcEAIQFw</string>
+    <string name="achievement_thats_just_stupid">CgkI1sfZypEcEAIQGA</string>
+    <string name="achievement_oh_cmon">CgkI1sfZypEcEAIQGQ</string>
+    <string name="achievement_ok_you_win">CgkI1sfZypEcEAIQGg</string>
+    <string name="achievement_reported">CgkI1sfZypEcEAIQGw</string>
+    <string name="achievement_ok_im_out">CgkI1sfZypEcEAIQHA</string>
     <string name="leaderboard_regular_mode">CgkI1sfZypEcEAIQCA</string>
     <string name="leaderboard_hardcore_mode">CgkI1sfZypEcEAIQCQ</string>
 </resources>

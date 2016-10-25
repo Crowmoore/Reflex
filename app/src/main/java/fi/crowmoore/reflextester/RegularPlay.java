@@ -137,6 +137,15 @@ public class RegularPlay extends AppCompatActivity implements View.OnClickListen
         if(score >= 5000) {
             achievementManager.unlockAchievement(getString(R.string.achievement_insane_reflexes));
         }
+        if(score >= 10000) {
+            achievementManager.unlockAchievement(getString(R.string.achievement_thats_just_stupid));
+        }
+        if(score >= 15000) {
+            achievementManager.unlockAchievement(getString(R.string.achievement_oh_cmon));
+        }
+        if(score >= 20000) {
+            achievementManager.unlockAchievement(getString(R.string.achievement_ok_you_win));
+        }
     }
 
     protected void endGame() {
@@ -373,8 +382,8 @@ public class RegularPlay extends AppCompatActivity implements View.OnClickListen
 
         MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id_for_ads));
         adView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
-        //AdRequest adRequest = new AdRequest.Builder().build();
+        //AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
 
         taps = 0;

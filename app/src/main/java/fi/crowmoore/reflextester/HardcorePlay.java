@@ -141,8 +141,14 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
         if(score >= 100) {
             achievementManager.unlockAchievement(getString(R.string.achievement_not_going_any_farther));
         }
-        if(score >= 3000) {
+        if(score >= 1000) {
             achievementManager.unlockAchievement(getString(R.string.achievement_are_you_cheating));
+        }
+        if(score >= 5000) {
+            achievementManager.unlockAchievement(getString(R.string.achievement_reported));
+        }
+        if(score >= 10000) {
+            achievementManager.unlockAchievement(getString(R.string.achievement_ok_im_out));
         }
     }
 
@@ -355,8 +361,8 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
         reactionTime = new ReactionTime();
         MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id_for_ads));
         adView = (AdView) findViewById(R.id.adViewHC);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
-        //AdRequest adRequest = new AdRequest.Builder().build();
+        //AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
 
         taps = 0;
