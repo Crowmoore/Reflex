@@ -1,12 +1,7 @@
 package fi.crowmoore.reflextester;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
-
-import java.sql.Ref;
 
 /**
  * Created by Crowmoore on 09-Oct-16.

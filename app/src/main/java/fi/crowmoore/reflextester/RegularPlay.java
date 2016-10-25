@@ -1,7 +1,6 @@
 package fi.crowmoore.reflextester;
 
 import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
@@ -21,14 +20,13 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
+import static fi.crowmoore.reflextester.MainActivity.PREFERENCES;
 
 public class RegularPlay extends AppCompatActivity implements View.OnClickListener {
 
@@ -382,8 +380,8 @@ public class RegularPlay extends AppCompatActivity implements View.OnClickListen
 
         MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id_for_ads));
         adView = (AdView) findViewById(R.id.adView);
-        //AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
-        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
+        //AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
 
         taps = 0;

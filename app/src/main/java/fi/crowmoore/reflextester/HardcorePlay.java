@@ -1,9 +1,6 @@
 package fi.crowmoore.reflextester;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
@@ -15,24 +12,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
+import static fi.crowmoore.reflextester.MainActivity.PREFERENCES;
 
 public class HardcorePlay extends AppCompatActivity implements View.OnClickListener {
 
@@ -79,10 +73,6 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_hardcore_play);
 
         reflex = (Reflex) getApplicationContext();
-
-        settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
-        muted = settings.getBoolean("Muted", false);
-        editor = settings.edit();
 
         initializeGame();
     }
@@ -355,14 +345,19 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
         commandsList = new ArrayList<>();
         commandTimesList = new ArrayList<>();
 
+        settings = getBaseContext().getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE);
+        muted = settings.getBoolean("Muted", false);
+        explicitSignOut = settings.getBoolean("ExplicitSignOut", false);
+        editor = settings.edit();
+
         createSoundPool();
         initializeSoundPool();
 
         reactionTime = new ReactionTime();
         MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id_for_ads));
         adView = (AdView) findViewById(R.id.adViewHC);
-        //AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
-        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
+        //AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
 
         taps = 0;

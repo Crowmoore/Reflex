@@ -11,12 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
-
 import java.util.Locale;
 
-import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
+import static fi.crowmoore.reflextester.MainActivity.PREFERENCES;
 
 /**
  * Created by Crowmoore on 11-Oct-16.
@@ -36,15 +33,6 @@ public class StatsDialogFragment extends DialogFragment {
         super.onActivityCreated(savedInstanceState);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if(dialog != null) {
-            //dialog.getWindow().setLayout(1000, 1400);
-        }
     }
 
     private void setStats(View view) {

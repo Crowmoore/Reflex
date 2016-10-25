@@ -2,9 +2,8 @@ package fi.crowmoore.reflextester;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.view.View;
 
-import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
+import static fi.crowmoore.reflextester.MainActivity.PREFERENCES;
 
 /**
  * Created by Crowmoore on 30-Sep-16.

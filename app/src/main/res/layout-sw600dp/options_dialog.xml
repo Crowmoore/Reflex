@@ -35,7 +35,7 @@
         android:id="@+id/sign_out_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sign Out"
+        android:text="@string/sign_out_button"
         android:visibility="invisible"
         android:layout_marginTop="40dp"
         android:layout_alignTop="@+id/info"

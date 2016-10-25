@@ -27,13 +27,4 @@ public class SoundDialogFragment extends DialogFragment {
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if(dialog != null) {
-            //dialog.getWindow().setLayout(1000, 1300);
-        }
-    }
 }

@@ -4,6 +4,7 @@
     <string name="text_hardcore">Hardcore</string>
     <string name="text_options">Options</string>
     <string name="text_leaderboards">Leaderboards</string>
+    <string name="sign_out_button">Sign out</string>
     <string name="sound_label">Mute sound</string>
     <string name="soundset_label">Soundset</string>
     <string name="music_volume">Music volume</string>

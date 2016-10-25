@@ -1,12 +1,9 @@
 package fi.crowmoore.reflextester;
 
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,15 +35,6 @@ public class GameOverDialogFragment extends DialogFragment {
         Bundle bundle = getArguments();
         setGameResults(root, bundle);
         return root;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if(dialog != null) {
-            //dialog.getWindow().setLayout(1000, 1400);
-        }
     }
 
     @Override

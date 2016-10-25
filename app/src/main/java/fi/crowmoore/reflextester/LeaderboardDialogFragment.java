@@ -1,6 +1,5 @@
 package fi.crowmoore.reflextester;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.graphics.Color;
@@ -20,15 +19,6 @@ public class LeaderboardDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.leaderboard_dialog, container, false);
         return root;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if(dialog != null) {
-            //dialog.getWindow().setLayout(1000, 800);
-        }
     }
 
     @Override

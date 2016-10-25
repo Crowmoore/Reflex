@@ -3,32 +3,18 @@ package fi.crowmoore.reflextester;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
-
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.games.Games;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-
-import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
-
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
 
-    public static final String RESOURCE_PREFIX = "android.resource://fi.crowmoore.reflextester/";
+    public static final String PREFERENCES = "PreferencesFile";
     public static final int RC_SIGN_IN = 9001;
     public static final int REQUEST_LEADERBOARD = 100;
     public static final int REQUEST_ACHIEVEMENTS = 101;
@@ -39,15 +25,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private OptionsDialogFragment optionsDialog;
     private StatsDialogFragment statsDialog;
     private SoundDialogFragment soundDialog;
-    private SignInDialogFragment signInDialog;
-    private MediaPlayer player;
     private boolean explicitSignOut = false;
     private boolean muted = false;
     private float volume;
-    private ArrayList<Integer> playlist;
-    private Map<Integer, String> songDictionary;
-    private String mode;
-    private int currentSong;
     private Reflex reflex;
     private TextView signInInfo;
     private TextView songName;
@@ -189,8 +169,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.regular_leaderboard: showLeaderboard("Regular"); break;
             case R.id.hardcore_leaderboard: showLeaderboard("Hardcore"); break;
             case R.id.achievements: showAchievements(); break;
-            case R.id.dialog_sign_in_button: onSignInClicked(); break;
-            case R.id.dialog_not_now_button: onNotNowClicked(); break;
             case R.id.close_button: statsDialog.dismiss(); break;
             case R.id.dialog_madman_no: onNoMadmanClicked(); break;
             case R.id.dialog_madman_yes: onYesMadmanClicked(); break;
@@ -249,33 +227,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if(reflex.getManager() != null && reflex.getManager().isConnected()) {
             achievementManager = new AchievementManager(reflex.getManager().getApiClient());
             startActivityForResult(achievementManager.getAchievementsIntent(), REQUEST_ACHIEVEMENTS);
-        }
-    }
-
-    public void onNotNowClicked() {
-        explicitSignOut = true;
-        editor.putBoolean("ExplicitSignOut", true);
-        editor.apply();
-        startGame();
-    }
-
-    public void onSignInClicked() {
-        explicitSignOut = false;
-        editor.putBoolean("ExplicitSignOut", false);
-        editor.apply();
-        reflex.setManager(this);
-        if(reflex.getManager() != null && reflex.getManager().isConnected()) {
-            startGame();
-        }
-    }
-
-    private void startGame() {
-        signInDialog.dismiss();
-        switch(mode) {
-            case "Regular": startActivity(new Intent(getApplicationContext(), RegularPlay.class));
-                            overridePendingTransition(R.anim.open_activity, R.anim.close_activity); break;
-            case "Hardcore": startActivity(new Intent(MainActivity.this, HardcorePlay.class));
-                             overridePendingTransition(R.anim.open_activity, R.anim.close_activity); break;
         }
     }
 }

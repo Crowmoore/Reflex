@@ -40,10 +40,6 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".OptionsActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".HardcorePlay"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"/>

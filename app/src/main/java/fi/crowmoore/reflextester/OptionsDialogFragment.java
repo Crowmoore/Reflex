@@ -18,12 +18,10 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.SignInButton;
-import com.google.firebase.storage.OnProgressListener;
 
-import static fi.crowmoore.reflextester.OptionsActivity.PREFERENCES;
+import static fi.crowmoore.reflextester.MainActivity.PREFERENCES;
 
 /**
  * Created by Crowmoore on 11-Oct-16.
@@ -53,15 +51,6 @@ public class OptionsDialogFragment extends DialogFragment implements AdapterView
         signOutButton = (Button) root.findViewById(R.id.sign_out_button);
         signInInfo = (TextView) root.findViewById(R.id.info);
         return root;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if(dialog != null) {
-            //dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, 525);
-        }
     }
 
     @Override
