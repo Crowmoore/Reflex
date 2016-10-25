@@ -1,6 +1,5 @@
 package fi.crowmoore.reflextester;
 
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -112,7 +111,7 @@ public class OptionsDialogFragment extends DialogFragment implements AdapterView
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        //
+
     }
 
     @Override

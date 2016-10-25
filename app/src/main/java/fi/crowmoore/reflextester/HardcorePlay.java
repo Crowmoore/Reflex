@@ -356,8 +356,8 @@ public class HardcorePlay extends AppCompatActivity implements View.OnClickListe
         reactionTime = new ReactionTime();
         MobileAds.initialize(getApplicationContext(), String.valueOf(R.string.app_id_for_ads));
         adView = (AdView) findViewById(R.id.adViewHC);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
-        //AdRequest adRequest = new AdRequest.Builder().build();
+        //AdRequest adRequest = new AdRequest.Builder().addTestDevice(String.valueOf(R.string.test_device_id)).build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
 
         taps = 0;
